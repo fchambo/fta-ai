@@ -1,0 +1,16 @@
+{
+  "name": "fta-marketplace",
+  "owner": {
+    "name": "fchambo"
+  },
+  "metadata": {
+    "description": "Claude plugins for freelance travel agents"
+  },
+  "plugins": [
+    {
+      "name": "travel-agent",
+      "source": "./travel-agent",
+      "description": "Daily toolkit for freelance travel agents: social content, destination research, client intake, trip folders, trip summaries and commission tracking."
+    }
+  ]
+}

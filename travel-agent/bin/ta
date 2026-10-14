@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# Entry point for the travel-agent tools. Creates a private Python environment
+# with openpyxl + python-docx on first run, so agents never have to install anything.
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+VENV="${CLAUDE_PLUGIN_DATA:-$HOME/.travel-agent}/venv"
+REQS="$ROOT/requirements.txt"
+
+venv_python() {
+  if [ -x "$VENV/bin/python" ]; then echo "$VENV/bin/python"; else echo "$VENV/Scripts/python.exe"; fi
+}
+
+if [ ! -f "$VENV/.installed" ] || ! cmp -s "$REQS" "$VENV/.installed"; then
+  # On Windows, "python3"/"python" may be Microsoft Store stubs that don't run: test each candidate.
+  base=""
+  for candidate in python3 python "py -3"; do
+    if $candidate -c "import sys; sys.exit(sys.version_info < (3, 9))" >/dev/null 2>&1; then
+      base=$candidate
+      break
+    fi
+  done
+  if [ -z "$base" ]; then
+    echo "Python 3 is required. Install it from https://www.python.org/downloads/ and try again." >&2
+    exit 1
+  fi
+  echo "Setting up travel-agent tools (first run only)..." >&2
+  $base -m venv "$VENV" >&2
+  "$(venv_python)" -m pip install --quiet --disable-pip-version-check -r "$REQS" >&2
+  cp "$REQS" "$VENV/.installed"
+fi
+
+PYTHONPATH="$ROOT/lib" exec "$(venv_python)" -m travel_agent_tools "$@"
