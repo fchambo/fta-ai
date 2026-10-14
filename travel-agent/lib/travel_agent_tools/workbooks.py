@@ -73,6 +73,14 @@ def from_cell(kind, value):
     return str(value).strip() if isinstance(value, str) else value
 
 
+def set_cell(ws, row, column, value):
+    """Write a value, never as a formula: text comes from clients, PDFs and chats (formula injection)."""
+    cell = ws.cell(row=row, column=column, value=value)
+    if isinstance(value, str) and cell.data_type == "f":
+        cell.data_type = "s"
+    return cell
+
+
 # --- file safety ------------------------------------------------------------------
 
 def ensure_closed(path):
@@ -99,7 +107,7 @@ def _write_kv(ws, fields, values, lang):
     for row, (key, *_rest) in enumerate(fields, start=1):
         kind = _rest[-1]
         ws.cell(row=row, column=1, value=schema.label((key, *_rest), lang)).font = LABEL_FONT
-        cell = ws.cell(row=row, column=2, value=to_cell(kind, values.get(key), lang))
+        cell = set_cell(ws, row, 2, to_cell(kind, values.get(key), lang))
         if kind == "date":
             cell.number_format = DATE_FORMAT[lang]
         if kind.startswith("choice:"):
@@ -123,7 +131,7 @@ def _write_table(ws, fields, rows, lang, fresh):
     for r, row in enumerate(rows, start=2):
         for col, (key, *_rest) in enumerate(fields, start=1):
             kind = _rest[-1]
-            cell = ws.cell(row=r, column=col, value=to_cell(kind, row.get(key), lang))
+            cell = set_cell(ws, r, col, to_cell(kind, row.get(key), lang))
             if kind == "date":
                 cell.number_format = DATE_FORMAT[lang]
     if fresh:
@@ -304,7 +312,7 @@ def write_tables(path, sheets):
                         v = date.fromisoformat(v)
                     except ValueError:
                         pass
-                cell = ws.cell(row=r, column=c, value=v)
+                cell = set_cell(ws, r, c, v)
                 if isinstance(v, date):
                     cell.number_format = "yyyy-mm-dd"
                 if isinstance(v, str) and len(v) > 40:
