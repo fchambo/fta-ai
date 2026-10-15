@@ -1,6 +1,6 @@
 ---
 name: social-content
-description: Create social media content for a freelance travel agent, including Instagram posts and carousels, Reels/TikTok scripts, stories, Facebook and LinkedIn posts, WhatsApp broadcast messages, and monthly content calendars (delivered in chat, as Word drafts, or as an Excel calendar). Use when a travel agent asks for posts, captions, hashtags, reels, content ideas, a content calendar, or promotion of a destination, offer or client trip.
+description: Create social media content for a freelance travel agent, including Instagram posts and carousels, Reels/TikTok scripts, stories, Facebook and LinkedIn posts, WhatsApp broadcast messages, and monthly content calendars (delivered in chat, as Word drafts, or as an Excel calendar). Use when a travel agent asks for posts, captions, hashtags, reels, content ideas, a content calendar, or promotion of a destination, offer or client trip. También en español: posteos, publicaciones, carrusel, reels, historias, hashtags, ideas de contenido, calendario de contenidos, difusión de WhatsApp, promocionar un destino u oferta.
 ---
 
 # Social media content
@@ -13,7 +13,7 @@ First read `references/workspace.md` in this skill's folder (`${CLAUDE_SKILL_DIR
 
 Look for `Marketing/Brand Profile.docx` (Spanish: `Perfil de Marca.docx`) and read it with `ta read-doc`. If it doesn't exist, ask these questions (keep it short) and save the answers as that Word file, so the agent can edit it themselves:
 - Agent/brand name, handles, and the main channels they use
-- Language(s) and tone (warm, luxury, fun, expert...), and words or emojis to avoid
+- Language(s) and tone (warm, luxury, fun, expert...), Spanish register (*vos*, *tú* or *usted*), and words or emojis to avoid
 - Niche and audience (honeymooners, families, luxury, adventure, seniors, corporate...)
 - Home market and city (affects departure airports, seasons and currency)
 - Call to action (WhatsApp link, DM keyword, booking link) and any legal lines they need, such as an agency license number

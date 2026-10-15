@@ -7,7 +7,7 @@ import re
 import sys
 from datetime import date
 
-from . import docs, logic, schema, workbooks
+from . import docs, i18n, logic, schema, workbooks
 from .workbooks import FileOpenError
 
 CONFIG = ".travel-agent.json"
@@ -190,18 +190,25 @@ def cmd_commissions(args):
     result["trip_sheets"] = files
     if args.report:
         lang = cfg.get("_lang", "en")
-        es = lang == "es"
-        cols = ["client", "booking", "provider", "product", "rule", "gross", "commission",
-                "withholding", "vat_to_invoice", "currency", "expected_date", "status"]
+
+        def sheet(name_key, keys, rows):
+            return {"name": i18n.r(lang, name_key), "columns": [i18n.r(lang, k) for k in keys],
+                    "rows": [[row.get(k) for k in keys] for row in rows]}
+
+        bookings = [{**b, "rule": b["rule_label"], "status": i18n.r(lang, b["status"])} for b in result["bookings"]]
+        incentives = [{**i, "next_tier": i18n.r(lang, "next_tier_text", missing=i18n.money(i["next_tier"]["missing"], lang),
+                                                extra=i["next_tier"]["extra_pct"], start=i18n.money(float(i["next_tier"]["from"]), lang))
+                       if i["next_tier"] else ""} for i in result["incentives"]]
+        currency_rows = [{"currency": k, **{s: v[s] for s in ("received", "retained", "pending", "overdue")}}
+                         for k, v in result["by_currency"].items()]
         workbooks.write_tables(args.report, [
-            {"name": "Comisiones" if es else "Commissions", "columns": cols, "rows": result["bookings"]},
-            {"name": "Por proveedor" if es else "By provider", "columns": ["provider", "bookings", "gross", "commission", "currency"],
-             "rows": [{"provider": k, **v} for k, v in result["by_provider"].items()]},
-            {"name": "Por moneda" if es else "By currency", "columns": ["currency", "received", "retained", "pending", "overdue"],
-             "rows": [{"currency": k, **v} for k, v in result["by_currency"].items()]},
-            {"name": "Incentivos" if es else "Incentives", "columns": ["provider", "year", "volume", "current_extra_pct", "bonus_estimate", "next_tier"],
-             "rows": [{**i, "next_tier": json.dumps(i["next_tier"], ensure_ascii=False) if i["next_tier"] else ""} for i in result["incentives"]]},
-            {"name": "Avisos" if es else "Warnings", "columns": ["warning"], "rows": [[w] for w in result["warnings"]]},
+            sheet("sheet_commissions", ["client", "booking", "provider", "product", "rule", "gross", "commission",
+                                        "withholding", "vat_to_invoice", "currency", "expected_date", "status"], bookings),
+            sheet("sheet_by_provider", ["provider", "bookings", "gross", "commission", "currency"],
+                  [{"provider": k, **v} for k, v in result["by_provider"].items()]),
+            sheet("sheet_by_currency", ["currency", "received", "retained", "pending", "overdue"], currency_rows),
+            sheet("sheet_incentives", ["provider", "year", "volume", "current_extra_pct", "bonus_estimate", "next_tier"], incentives),
+            sheet("sheet_warnings", ["warning"], [{"warning": w} for w in result["warnings"]]),
         ])
         result["report"] = args.report
     out(result)

@@ -1,6 +1,6 @@
 ---
 name: trip-scaffold
-description: Set up a travel agency workspace or create the folders and Excel Trip Sheet for a new client trip, and load booking vouchers or confirmations (PDF, Word, email, screenshots) into that Trip Sheet. Use when a travel agent mentions a new client, inquiry or booking, asks to set up, organize or create folders for a trip, or shares vouchers or confirmations to record.
+description: Set up a travel agency workspace or create the folders and Excel Trip Sheet for a new client trip, and load booking vouchers or confirmations (PDF, Word, email, screenshots) into that Trip Sheet. Use when a travel agent mentions a new client, inquiry or booking, asks to set up, organize or create folders for a trip, or shares vouchers or confirmations to record. También en español: nuevo cliente, nueva consulta o reserva, armar o configurar mi agencia, crear carpetas o la ficha del viaje, cargar vouchers o confirmaciones.
 ---
 
 # Trip scaffold

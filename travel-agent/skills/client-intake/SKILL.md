@@ -1,6 +1,6 @@
 ---
 name: client-intake
-description: Build a tailored questionnaire for a travel client based on the destinations and trip type they want (as a Word or PDF form, or a WhatsApp or email message), then load the client's answers into the trip's Excel Trip Sheet. Use when a travel agent needs to know what to ask a client, prepare an intake form, qualify a new lead, or process answers a client sent back (filled Word or PDF, email or WhatsApp chat).
+description: Build a tailored questionnaire for a travel client based on the destinations and trip type they want (as a Word or PDF form, or a WhatsApp or email message), then load the client's answers into the trip's Excel Trip Sheet. Use when a travel agent needs to know what to ask a client, prepare an intake form, qualify a new lead, or process answers a client sent back (filled Word or PDF, email or WhatsApp chat). También en español: qué le pregunto al cliente, cuestionario, formulario de consulta, calificar un lead, cargar o procesar las respuestas del cliente.
 ---
 
 # Client intake
@@ -21,10 +21,10 @@ Ask clients the questions that matter for *their* trip, and nothing more. A beac
      - altitude, long layovers, or route order on multi-stop trips, but only when they change a decision
    - Aim for **12–20 questions**. Mark 3–5 as *needed to quote*.
 3. **Deliver in the format the agent asked for:**
-   - **Word form**, the default. Use the agent's first person and a warm greeting. Group questions under headings, put a blank answer line or checkbox options (`- [ ] Option`) under each one, and close with the next step and the agent's contact. Save it as `1 - Intake/Questionnaire - <Client>.docx` (Spanish: `Cuestionario - <Client>.docx`). Add `--pdf` if they will email it as a PDF.
+   - **Word form**, the default. Use the agent's first person and a warm greeting. Group questions under headings, put a blank answer line or checkbox options (`- [ ] Option`) under each one, and close with the next step and the agent's contact. Save it in the trip's intake folder (`1 - Intake` / `1 - Consulta`), named as in the file-name table in `references/workspace.md`. Add `--pdf` if they will email it as a PDF.
    - **WhatsApp**: give the text in chat, ready to paste. Use 2–3 short messages with numbered questions and no tables. Offer to also save the Word version.
    - **Email**: give the subject and body in chat, ready to paste.
-4. Write it in the **client's language**.
+4. Write it in the **client's language** (`client_language` in the Trip Sheet; ask if empty) and in the agent's Spanish register (*vos*, *tú* or *usted*). `references/question-bank.md` is in English: translate the questions you pick using the glossary in `references/workspace.md`, and write them the way an agent from that market would naturally ask them.
 
 ## Mode B: Load the answers
 

@@ -1,6 +1,6 @@
 ---
 name: trip-summary
-description: Summarize a client's trip from its Excel Trip Sheet, covering travel dates, bookings, payment due dates, cancellation deadlines and balances, as an internal checklist or a client-facing Word/PDF summary, or list what's due across all clients. Use when a travel agent asks for a trip summary, itinerary overview, payment schedule, "what's due", upcoming deadlines, or a status of their clients.
+description: Summarize a client's trip from its Excel Trip Sheet, covering travel dates, bookings, payment due dates, cancellation deadlines and balances, as an internal checklist or a client-facing Word/PDF summary, or list what's due across all clients. Use when a travel agent asks for a trip summary, itinerary overview, payment schedule, "what's due", upcoming deadlines, or a status of their clients. También en español: resumen del viaje, itinerario, cronograma de pagos, qué vence esta semana, próximos vencimientos, quién me debe, estado de mis clientes.
 ---
 
 # Trip summary
@@ -27,7 +27,7 @@ The dates are computed by `ta timeline`, so overdue and upcoming items are alway
    ## Travelers & documents
    ## Next steps             (- [ ] checkboxes)
    ```
-   Write dates in the format the agent's market uses (DD/MM/YYYY for Spanish workspaces).
+   Write dates and amounts in the audience's format, and translate the timeline labels when the client's language differs from the workbook's. Both are covered in **Language** in `references/workspace.md`.
 5. Save to `7 - Itinerary & Summaries/`, e.g. `Trip Summary - <Client> - <YYYY-MM-DD>.pdf` or `Resumen del Viaje - <Client> - <fecha>.pdf`.
 
 ## All clients ("what's due this week?")

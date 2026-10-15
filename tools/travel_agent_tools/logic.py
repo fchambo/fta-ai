@@ -1,6 +1,7 @@
 """Timeline and commission calculations on data read from the workbooks."""
 from datetime import date, timedelta
 
+from . import i18n, schema
 from .workbooks import parse_date
 
 DUE_SOON_DAYS = 14
@@ -20,7 +21,7 @@ def _status(when, today, done):
 
 
 def timeline(trip, today):
-    info = trip.get("trip") or {}
+    info, lang = trip.get("trip") or {}, trip.get("_lang", "en")
     events = []
 
     def add(when, kind, label, done=False, **extra):
@@ -32,13 +33,14 @@ def timeline(trip, today):
         events.append({"date": when.isoformat(), "kind": kind, "label": label,
                        "status": _status(when, today, done), "days_from_today": (when - today).days, **extra})
 
-    add(info.get("start_date"), "travel", "Departure", done=None)
-    add(info.get("end_date"), "travel", "Return", done=None)
+    add(info.get("start_date"), "travel", i18n.t(lang, "departure"), done=None)
+    add(info.get("end_date"), "travel", i18n.t(lang, "return"), done=None)
 
     for b in trip.get("bookings") or []:
-        name = " ".join(str(x) for x in (b.get("type"), b.get("provider"), b.get("product")) if x)
-        add(b.get("start"), "booking", f"{name} starts", done=None, booking=b.get("id"))
-        add(b.get("cancellation_deadline"), "deadline", f"Free cancellation ends: {name}", booking=b.get("id"))
+        kind = schema.choice_label("booking_type", b.get("type"), lang) if b.get("type") else None
+        name = " ".join(str(x) for x in (kind, b.get("provider"), b.get("product")) if x)
+        add(b.get("start"), "booking", i18n.t(lang, "booking_starts", name=name), done=None, booking=b.get("id"))
+        add(b.get("cancellation_deadline"), "deadline", i18n.t(lang, "free_cancel_ends", name=name), booking=b.get("id"))
 
     totals = {}
     for p in trip.get("payments") or []:
@@ -48,38 +50,39 @@ def timeline(trip, today):
         amount = _num(p.get("amount")) or 0
         due = parse_date(p.get("due_date"))
         bucket["paid" if paid else "overdue" if due and due < today else "pending"] += amount
-        who = f"{p.get('payer') or 'client'} → {p.get('payee')}" if p.get("payee") else (p.get("payer") or "client")
-        add(p.get("due_date"), "payment", f"{p.get('description') or 'Payment'} ({who})",
+        payer = schema.choice_label("payer", p.get("payer") or "client", lang)
+        who = f"{payer} → {p.get('payee')}" if p.get("payee") else payer
+        add(p.get("due_date"), "payment", f"{p.get('description') or i18n.t(lang, 'payment')} ({who})",
             done=paid, amount=amount, currency=cur, payer=p.get("payer") or "client", booking=p.get("booking"))
 
     for d in trip.get("deadlines") or []:
-        add(d.get("date"), "deadline", d.get("what") or "Deadline", done=d.get("done") == "yes")
+        add(d.get("date"), "deadline", d.get("what") or i18n.t(lang, "deadline"), done=d.get("done") == "yes")
 
     events.sort(key=lambda e: e["date"])
     return {"today": today.isoformat(), "trip": info, "events": events,
-            "payment_totals": totals, "checks": data_checks(trip)}
+            "payment_totals": totals, "checks": data_checks(trip), "lang": lang}
 
 
 def data_checks(trip):
-    info, issues = trip.get("trip") or {}, []
+    info, issues, lang = trip.get("trip") or {}, [], trip.get("_lang", "en")
     end = parse_date(info.get("end_date"))
     start = parse_date(info.get("start_date"))
     for b in trip.get("bookings") or []:
         if not b.get("confirmation") and b.get("id"):
-            issues.append(f"Booking {b['id']} has no confirmation number")
+            issues.append(i18n.t(lang, "no_confirmation", id=b["id"]))
     for p in trip.get("payments") or []:
         if not p.get("due_date"):
-            issues.append(f"Payment '{p.get('description')}' has no due date")
+            issues.append(i18n.t(lang, "payment_no_due", desc=p.get("description")))
         elif start and p.get("payer", "client") == "client" and parse_date(p["due_date"]) > start:
-            issues.append(f"Client payment '{p.get('description')}' is due after departure")
-    for t in trip.get("travelers") or []:
-        exp = parse_date(t.get("passport_expiry"))
+            issues.append(i18n.t(lang, "payment_after_departure", desc=p.get("description")))
+    for traveler in trip.get("travelers") or []:
+        exp = parse_date(traveler.get("passport_expiry"))
         if exp and end and exp < end + timedelta(days=183):
-            issues.append(f"{t.get('name')}: passport expires {exp.isoformat()}, less than 6 months after return")
+            issues.append(i18n.t(lang, "passport_expiry", name=traveler.get("name"), date=i18n.date_text(exp, lang)))
     gross = sum(_num(b.get("gross_amount")) or 0 for b in trip.get("bookings") or [])
     billed = sum(_num(p.get("amount")) or 0 for p in trip.get("payments") or [] if (p.get("payer") or "client") == "client")
     if gross and billed and abs(gross - billed) > 0.01:
-        issues.append(f"Client payments ({billed:,.2f}) don't match booking prices ({gross:,.2f})")
+        issues.append(i18n.t(lang, "payments_mismatch", billed=i18n.money(billed, lang), gross=i18n.money(gross, lang)))
     return issues
 
 
@@ -89,38 +92,39 @@ def _rule(row):
     return {k: row.get(k) for k in ("rule_type", "rate_pct", "base", "fixed_amount", "fixed_per", "markup_pct")}
 
 
-def _base(b, base, warnings, ref):
+def _base(b, base, warnings, ref, lang):
     gross = _num(b.get("gross_amount")) or 0
     if base == "gross_ex_taxes":
         taxes = _num(b.get("taxes_amount"))
         if taxes is None:
-            warnings.append(f"{ref}: no taxes amount, used the full price as base (commission may be overstated)")
+            warnings.append(i18n.t(lang, "no_taxes", ref=ref))
             return gross
         return gross - taxes
     return gross
 
 
-def _compute(rule, b, warnings, ref):
+def _compute(rule, b, warnings, ref, lang):
     kind = rule.get("rule_type")
     if kind == "percentage":
-        return _base(b, rule.get("base") or "gross", warnings, ref) * (_num(rule.get("rate_pct")) or 0) / 100
+        return _base(b, rule.get("base") or "gross", warnings, ref, lang) * (_num(rule.get("rate_pct")) or 0) / 100
     if kind == "net_markup":
         gross, net = _num(b.get("gross_amount")), _num(b.get("net_amount"))
         if gross is None or net is None:
-            warnings.append(f"{ref}: net-rate rule needs both client price and net amount")
+            warnings.append(i18n.t(lang, "net_needs_amounts", ref=ref))
             return 0.0
         target = _num(rule.get("markup_pct"))
         if target is not None and net and (gross - net) / net * 100 < target:
-            warnings.append(f"{ref}: markup {(gross - net) / net * 100:.1f}% is below the suggested {target:g}%")
+            warnings.append(i18n.t(lang, "markup_below", ref=ref, actual=i18n.number(round((gross - net) / net * 100, 1), lang),
+                                  target=i18n.number(target, lang)))
         return gross - net
     if kind == "fixed":
         per = rule.get("fixed_per") or "booking"
         units = 1 if per == "booking" else _num(b.get("pax" if per == "pax" else "nights"))
         if units is None:
-            warnings.append(f"{ref}: fixed amount per {per} but the booking has no {'passengers' if per == 'pax' else 'nights'}")
+            warnings.append(i18n.t(lang, "fixed_no_units_pax" if per == "pax" else "fixed_no_units_night", ref=ref))
             units = 1
         return (_num(rule.get("fixed_amount")) or 0) * units
-    warnings.append(f"{ref}: provider has no commission rule set")
+    warnings.append(i18n.t(lang, "no_rule", ref=ref))
     return 0.0
 
 
@@ -148,7 +152,7 @@ def _payout_status(method, received, due, today):
 
 
 def commissions(cfg, trips, today):
-    settings = cfg.get("settings") or {}
+    settings, lang = cfg.get("settings") or {}, cfg.get("_lang", "en")
     withholding = _num(settings.get("withholding_pct")) or 0
     vat = _num(settings.get("tax_on_commission_pct")) or 0
     providers = {str(p["id"]).lower(): p for p in cfg.get("providers") or [] if p.get("id")}
@@ -157,11 +161,11 @@ def commissions(cfg, trips, today):
 
     rows, warnings, volume = [], [], {}
     if not settings.get("withholding_pct") and not settings.get("tax_on_commission_pct"):
-        warnings.append("VAT and withholding % are not set in Settings: amounts are before taxes")
+        warnings.append(i18n.t(lang, "no_taxes_settings"))
     for p in providers.values():
         exp = parse_date(p.get("contract_expires"))
         if exp and exp < today:
-            warnings.append(f"{p['id']}: contract expired on {exp.isoformat()}")
+            warnings.append(i18n.t(lang, "contract_expired", id=p["id"], date=i18n.date_text(exp, lang)))
 
     for trip in trips:
         info = trip.get("trip") or {}
@@ -171,19 +175,22 @@ def commissions(cfg, trips, today):
             ref = f"{info.get('client_name')} / {b.get('id')}"
             provider = providers.get(str(b.get("provider") or "").lower())
             if not provider:
-                warnings.append(f"{ref}: provider '{b.get('provider')}' is not in the Providers sheet")
+                warnings.append(i18n.t(lang, "unknown_provider", ref=ref, provider=b.get("provider")))
                 continue
             if b.get("currency") and provider.get("currency") and b["currency"] != provider["currency"]:
-                warnings.append(f"{ref}: booking in {b['currency']} but provider pays in {provider['currency']}")
+                warnings.append(i18n.t(lang, "currency_mismatch", ref=ref, booking=b["currency"], provider=provider["currency"]))
             product = products.get((str(provider["id"]).lower(), str(b.get("product") or "").lower()))
             rule, source = (_rule(product), "product") if product and product.get("rule_type") else (_rule(provider), "provider default")
-            amount = round(_compute(rule, b, warnings, ref), 2)
+            amount = round(_compute(rule, b, warnings, ref, lang), 2)
             method = provider.get("payout_method")
             due = _expected(provider, b, trip)
             rows.append({
                 "client": info.get("client_name"), "trip": info.get("trip_id"), "booking": b.get("id"),
                 "provider": provider["id"], "product": b.get("product"),
-                "rule": f"{rule.get('rule_type')} ({source})", "gross": _num(b.get("gross_amount")),
+                "rule": f"{rule.get('rule_type')} ({source})",
+                "rule_label": (f"{i18n.r(lang, rule['rule_type'])} ({i18n.r(lang, 'product_rule' if source == 'product' else 'provider_default')})"
+                               if rule.get("rule_type") in ("percentage", "net_markup", "fixed") else "-"),
+                "gross": _num(b.get("gross_amount")),
                 "commission": amount, "withholding": round(amount * withholding / 100, 2),
                 "vat_to_invoice": round(amount * vat / 100, 2) if method == "invoice" else 0,
                 "currency": b.get("currency") or provider.get("currency"), "payout_method": method,
@@ -204,14 +211,14 @@ def commissions(cfg, trips, today):
 
     incentives = []
     tiers_by_provider = {}
-    for t in cfg.get("incentives") or []:
-        tiers_by_provider.setdefault(str(t.get("provider_id")).lower(), []).append(t)
+    for tier in cfg.get("incentives") or []:
+        tiers_by_provider.setdefault(str(tier.get("provider_id")).lower(), []).append(tier)
     for (pid, year), vol in sorted(volume.items()):
-        tiers = sorted(tiers_by_provider.get(pid.lower(), []), key=lambda t: _num(t.get("from_volume")) or 0)
+        tiers = sorted(tiers_by_provider.get(pid.lower(), []), key=lambda tier: _num(tier.get("from_volume")) or 0)
         if not tiers:
             continue
-        reached = [t for t in tiers if vol >= (_num(t.get("from_volume")) or 0)]
-        nxt = next((t for t in tiers if vol < (_num(t.get("from_volume")) or 0)), None)
+        reached = [tier for tier in tiers if vol >= (_num(tier.get("from_volume")) or 0)]
+        nxt = next((tier for tier in tiers if vol < (_num(tier.get("from_volume")) or 0)), None)
         rate = (_num(reached[-1].get("rate_pct")) or 0) if reached else 0
         incentives.append({
             "provider": pid, "year": year, "volume": round(vol, 2), "current_extra_pct": rate,
@@ -220,5 +227,5 @@ def commissions(cfg, trips, today):
                           "missing": round(_num(nxt.get("from_volume")) - vol, 2)} if nxt else None,
         })
 
-    return {"today": today.isoformat(), "bookings": rows, "by_provider": by_provider,
+    return {"today": today.isoformat(), "lang": lang, "bookings": rows, "by_provider": by_provider,
             "by_currency": by_currency, "incentives": incentives, "warnings": warnings}

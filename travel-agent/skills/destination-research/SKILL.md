@@ -1,6 +1,6 @@
 ---
 name: destination-research
-description: Research a travel destination for a freelance travel agent, covering best season, entry requirements, getting there, where to stay, experiences, costs, risks, and which client profiles it suits, then save it as a reusable Word destination guide (optionally a client-ready PDF). Use when a travel agent asks to research, compare or learn about a destination, find new or trending destinations to sell, or check if a destination fits a client.
+description: Research a travel destination for a freelance travel agent, covering best season, entry requirements, getting there, where to stay, experiences, costs, risks, and which client profiles it suits, then save it as a reusable Word destination guide (optionally a client-ready PDF). Use when a travel agent asks to research, compare or learn about a destination, find new or trending destinations to sell, or check if a destination fits a client. También en español: investigar o comparar destinos, guía de destino, cuándo conviene viajar, requisitos de entrada o visa, destinos de moda para vender, si un destino le sirve a un cliente.
 ---
 
 # Destination research
@@ -22,7 +22,7 @@ Produce a guide a travel agent can **sell from**, not just a tourist overview. S
 
 ## Guide structure
 
-Draft it in markdown, then save it with `ta docx` as `Destinations/<Destination> - Guide.docx` (Spanish: `Destinos/<Destino> - Guía.docx`). Put the research date under the title.
+Draft it in markdown, then save it with `ta docx` as `Destinations/<Destination> - Guide.docx` (Spanish: `Destinos/<Destino> - Guía.docx`). Put the research date under the title. Write the guide in the workspace language, and a client PDF in the client's language.
 
 1. **Snapshot**: one paragraph pitch, best for (couples, families, adventure, luxury...), ideal trip length
 2. **When to go**: month-by-month table (weather · crowds · price level · events), plus months to avoid and why

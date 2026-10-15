@@ -49,6 +49,66 @@ Read **PDFs** (vouchers, confirmations, rate sheets, passports) with your own Re
 
 In folder mode, if there's no workspace yet, ask where the agent keeps client files (e.g. `~/Documents/Agencia`) and which language they want, then run `init`.
 
+## Language (English / Spanish)
+
+Every skill works in English and Spanish. Decide three things separately:
+
+1. **Talking to the agent:** use the language the agent writes in. If it changes mid-conversation, follow the switch.
+2. **Agent-facing files** (Trip Sheet, providers workbook, internal summaries, reports, guides): use the **workspace language**. In folder mode it's in `.travel-agent.json`; otherwise it's the language of the workbook's sheet names (`ta` reports it as `_lang`/`lang`). Never mix languages inside one workbook: new rows use the same dropdown labels as the existing ones.
+3. **Client-facing material** (questionnaires, client summaries, WhatsApp messages, reminders): use the **client's language** (`client_language` in the Trip Sheet). If it's empty, ask the agent and save the answer there. A Spanish-speaking agent can have English-speaking clients, and the other way round.
+
+**Spanish register.** Ask the agent once which form they use with clients, then keep it:
+- **vos** (Argentina, Uruguay, Paraguay, much of Central America): *"¿Cuándo querés viajar?"*, *"Contame"*
+- **tú** (Spain, Mexico, Colombia, Peru, Chile, most of the Caribbean): *"¿Cuándo quieres viajar?"*, *"Cuéntame"*
+- **usted** (formal or corporate clients, older travelers): *"¿Cuándo desea viajar?"*
+
+Agent-facing text defaults to the agent's own form. Use neutral Spanish when you don't know.
+
+**Formats**
+| | English | Spanish |
+|---|---|---|
+| Dates in text and documents | 14 Oct 2026 or 2026-10-14 | 14/10/2026 |
+| Money | USD 1,234.50 | USD 1.234,50 |
+| Workbook dates | Real Excel dates (`ta` applies the right display format) | Same |
+
+**File names.** Use these and replace the parts in angle brackets:
+| Document | English | Spanish |
+|---|---|---|
+| Trip Sheet | `Trip Sheet - <Client> - <Destination>.xlsx` | `Ficha del Viaje - <Cliente> - <Destino>.xlsx` |
+| Providers workbook | `Providers & Commissions.xlsx` | `Proveedores y Comisiones.xlsx` |
+| Questionnaire | `Questionnaire - <Client>.docx` | `Cuestionario - <Cliente>.docx` |
+| Client summary | `Trip Summary - <Client> - <YYYY-MM-DD>.pdf` | `Resumen del Viaje - <Cliente> - <AAAA-MM-DD>.pdf` |
+| Internal checklist | `Internal Checklist - <Client> - <YYYY-MM-DD>.docx` | `Checklist Interno - <Cliente> - <AAAA-MM-DD>.docx` |
+| Destination guide | `<Destination> - Guide.docx` | `<Destino> - Guía.docx` |
+| Commission report | `Commissions Report <YYYY-MM-DD>.xlsx` | `Reporte de Comisiones <AAAA-MM-DD>.xlsx` |
+| Content calendar | `Content Calendar - <YYYY-MM>.xlsx` | `Calendario de Contenidos - <AAAA-MM>.xlsx` |
+| Post drafts | `Posts - <Topic> - <YYYY-MM>.docx` | `Publicaciones - <Tema> - <AAAA-MM>.docx` |
+| Brand profile | `Brand Profile.docx` | `Perfil de Marca.docx` |
+| What's due | `Due This Week - <YYYY-MM-DD>.xlsx` | `Vencimientos de la Semana - <AAAA-MM-DD>.xlsx` |
+
+**Travel-trade glossary.** Use the terms agents use, not literal translations:
+| English | Spanish (LatAm) | Notes |
+|---|---|---|
+| deposit | seña | Spain: *depósito* or *paga y señal* |
+| balance / final payment | saldo | |
+| voucher | voucher | Not *cupón* |
+| booking / reservation | reserva | |
+| quote / proposal | cotización / presupuesto | |
+| tour operator / wholesaler | operador / mayorista | |
+| DMC / ground handler | receptivo | |
+| consolidator | consolidador | |
+| net rate | tarifa neta | |
+| markup | markup / margen | |
+| commission | comisión | |
+| travel insurance / assistance | asistencia al viajero / seguro | In Argentina, *asistencia* |
+| free cancellation until | cancelación sin cargo hasta | |
+| ticketing time limit | plazo de emisión | |
+| final names | nombres definitivos | |
+| transfer | traslado | |
+| layover | escala | |
+| agency license number | legajo (AR) / número de licencia | Shown in document footers |
+| fam trip | fam trip / viaje de familiarización | |
+
 ## Updating workbooks
 
 - JSON keys are section names: `trip` (object), plus `travelers`, `bookings`, `payments` and `deadlines` (lists of objects). For the providers workbook they're `settings`, `providers`, `products` and `incentives`. Get the field keys from `read-trip`/`read-providers` output.
@@ -63,7 +123,7 @@ In folder mode, if there's no workspace yet, ask where the agent keeps client fi
 2. Run `ta docx draft.md "<destination>/<Nice Name>.docx" [--pdf]`. In folder mode the destination is the right trip subfolder; in chat mode it's the outputs folder.
    - Use **`--pdf` for anything going to a client.** The PDF is generated directly and doesn't need Word.
    - Add `--footer "<agency name> · <license/legajo>"` when `agency_name` is set in the providers workbook Settings sheet.
-3. Name files the way a person would: `Questionnaire - María Pérez.docx`, `Cuestionario - María Pérez.docx`, `Trip Summary 2026-10-14.pdf`. Don't use slugs.
+3. Name files the way a person would, using the file-name table in **Language**. Don't use slugs.
 4. Never leave the markdown draft in the agency folder or the outputs folder.
 5. Status markers ✅ 🔴 🟡 ⚪ render correctly in both the Word document and the PDF.
 

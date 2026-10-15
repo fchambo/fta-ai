@@ -1,6 +1,6 @@
 ---
 name: commissions
-description: Set up and maintain a travel agent's Providers & Commissions Excel workbook (percentage, net-rate markup, fixed fees and volume incentives per provider and product), load rules from provider contracts or rate sheets (PDF, Word, Excel), calculate expected commissions per trip or period into an Excel report, and track what's received, retained, pending or overdue. Use when a travel agent mentions commissions, providers, suppliers, net rates, markups, operators, consolidators, incentives, or asks "how much will I earn".
+description: Set up and maintain a travel agent's Providers & Commissions Excel workbook (percentage, net-rate markup, fixed fees and volume incentives per provider and product), load rules from provider contracts or rate sheets (PDF, Word, Excel), calculate expected commissions per trip or period into an Excel report, and track what's received, retained, pending or overdue. Use when a travel agent mentions commissions, providers, suppliers, net rates, markups, operators, consolidators, incentives, or asks "how much will I earn". También en español: comisiones, proveedores, operadores, tarifas netas, markup, incentivos, cuánto voy a ganar, reporte de comisiones, cobré una comisión.
 ---
 
 # Providers & commissions
@@ -36,7 +36,9 @@ ta commissions "<Providers & Commissions.xlsx>" [Trip Sheet.xlsx …] --report "
 ```
 With no Trip Sheets given, it includes every trip in the workspace. Use `--report` whenever the agent wants something to keep or share with their accountant.
 
-Present the results in chat:
+The report's sheet names, headers and statuses follow the providers workbook's language. Name the file as in the file-name table in `references/workspace.md`.
+
+Present the results in chat, in the agent's language:
 - **Per trip:** booking, provider, rule, client price, commission and expected date/status, then the total and the margin as a % of the price.
 - **Per period:** totals by provider and currency, split into received, retained, pending and overdue.
 - **Incentives:** the current tier and how much more volume is needed to reach the next one. This helps the agent decide which provider to push.
