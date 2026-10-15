@@ -11,6 +11,21 @@ Agents keep working in **Excel, Word and PDF**. Claude reads their vouchers, con
 | `trip-summary` | Client PDF or internal Word summary of dates, payments due and deadlines; "what's due" across all clients | "What's due this week?" |
 | `commissions` | **Providers & Commissions** workbook, rules taken from contracts, Excel commission report | "How much will I earn on the Pérez trip?" |
 
+## Commands (English and Spanish)
+
+Type `/` in Claude to pick a skill directly. Each skill also has a Spanish command:
+
+| Skill | Spanish command | Use it to |
+|---|---|---|
+| `trip-scaffold` | `/nuevo-viaje` | New client or trip, agency setup, load vouchers |
+| `client-intake` | `/cuestionario-cliente` | Client questionnaire, or load the client's answers |
+| `destination-research` | `/investigar-destino` | Destination guide, comparisons, trending destinations |
+| `social-content` | `/contenido-redes` | Posts, reels, stories, content calendar |
+| `trip-summary` | `/resumen-de-viaje` | Trip summary, or what's due this week |
+| `commissions` | `/comisiones` | Commissions, providers, commission report |
+
+In Cowork and Claude Code, use the plugin prefix: `/travel-agent:resumen-de-viaje`. You don't need any command: describing the task in English or Spanish also works.
+
 ## Install
 
 **Claude chat or Cowork** (web or desktop app): open **Customize → Plugins → Add**, then either:
