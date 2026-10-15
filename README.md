@@ -8,7 +8,7 @@ See [travel-agent/README.md](travel-agent/README.md) for what each skill does.
 
 ## Install
 
-**In Claude (chat or Cowork):** open **Customize → Plugins → Add → Add marketplace**, enter `fchambo/fta-claude-plugin`, and add **Travel Agent**. Or use **Add → Upload plugin** with `travel-agent.zip` from the [latest release](https://github.com/fchambo/fta-claude-plugin/releases). If the repository is private, Claude asks you to connect GitHub and give the Claude GitHub App access to it.
+**In Claude (chat or Cowork):** open **Customize → Plugins → Add → Add marketplace**, enter `fchambo/fta-claude-plugin`, and add **Travel Agent**. Or use **Add → Upload plugin** with a `travel-agent.zip` built as shown below. If the repository is private, Claude asks you to connect GitHub and give the Claude GitHub App access to it.
 
 **In Claude Code:**
 
