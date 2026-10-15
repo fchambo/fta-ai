@@ -1,10 +1,12 @@
 {
   "name": "travel-agent",
-  "version": "0.2.0",
+  "displayName": "Travel Agent",
+  "version": "0.3.0",
   "description": "Daily toolkit for freelance travel agents working in Excel, Word and PDF: social content, destination research, client questionnaires, trip folders and Trip Sheets, trip summaries and commission tracking.",
   "author": {
     "name": "fchambo"
   },
+  "license": "MIT",
   "keywords": [
     "travel",
     "travel-agent",

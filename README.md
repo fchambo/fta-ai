@@ -8,19 +8,20 @@ See [travel-agent/README.md](travel-agent/README.md) for what each skill does.
 
 ## Install
 
-Requirements: [Claude Code](https://claude.com/claude-code) and [Python 3](https://www.python.org/downloads/). On Windows you also need [Git for Windows](https://git-scm.com/download/win), and when installing Python, tick **"Add python.exe to PATH"**.
+**In Claude (chat or Cowork):** open **Customize → Plugins → Add → Add marketplace**, enter `fchambo/fta-claude-plugin`, and add **Travel Agent**. Or use **Add → Upload plugin** with `travel-agent.zip` from the [latest release](https://github.com/fchambo/fta-claude-plugin/releases). If the repository is private, Claude asks you to connect GitHub and give the Claude GitHub App access to it.
+
+**In Claude Code:**
 
 ```bash
 claude plugin marketplace add fchambo/fta-claude-plugin
 claude plugin install travel-agent@fta-marketplace
 ```
 
-To get updates:
+Python 3 is needed for Cowork and Claude Code ([python.org](https://www.python.org/downloads/); on Windows tick **"Add python.exe to PATH"**). Nothing is needed for Claude chat.
+
+## Build the upload zip
 
 ```bash
-claude plugin marketplace update fta-marketplace
+python3 tools/build.py
+cd travel-agent && zip -r ../travel-agent.zip . -x "*/__pycache__/*" "*.DS_Store"
 ```
-
-If the repository is private, git on that computer must be signed in to a GitHub account with access to it. On Windows, Git Credential Manager opens a browser to sign in the first time.
-
-On first use the plugin spends about 30 seconds installing its Python libraries (it needs internet once). Then Claude asks where to keep the agency's files.

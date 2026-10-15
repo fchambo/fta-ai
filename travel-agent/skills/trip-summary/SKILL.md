@@ -5,7 +5,7 @@ description: Summarize a client's trip from its Excel Trip Sheet, covering trave
 
 # Trip summary
 
-First read `${CLAUDE_PLUGIN_ROOT}/references/workspace.md`. In this skill and that file, `ta` means `"${CLAUDE_PLUGIN_ROOT}/bin/ta"`. Always call it with that full path, quoted.
+First read `references/workspace.md` in this skill's folder (`${CLAUDE_SKILL_DIR}/references/workspace.md`): it says how to work in **folder mode** (Claude Code, Cowork) and **chat mode** (Claude chat, where files come as attachments and go back as downloads). In this skill and that file, `ta` means `python3 "${CLAUDE_SKILL_DIR}/scripts/ta.py"`. If that path doesn't resolve, as can happen in Claude chat where the skill folder is copied into the sandbox, use `scripts/ta.py` inside the copied skill folder.
 
 The dates are computed by `ta timeline`, so overdue and upcoming items are always correct. You write the words, and `ta docx` produces the files.
 

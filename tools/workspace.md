@@ -4,7 +4,7 @@ Travel agents work in **Excel, Word and PDF**. They never see JSON, YAML or Mark
 
 ## The `ta` tool
 
-All file work goes through one command, `ta`. The skill that sent you here gives its full path. It sets itself up on first run, which takes about 30 s.
+All file work goes through one Python script, `ta.py`, in this skill's `scripts/` folder. The skill gives its full path; below it's written `ta`. Run it with `python3` (on Windows, `python` if `python3` isn't found). Where the needed libraries aren't already installed, it sets itself up on first run, which takes about 30 s.
 
 | Command | Purpose |
 |---|---|
@@ -21,9 +21,21 @@ All file work goes through one command, `ta`. The skill that sent you here gives
 
 Read **PDFs** (vouchers, confirmations, rate sheets, passports) with your own Read tool. Read images (screenshots of WhatsApp chats or tickets) the same way.
 
-## Workspace
+## Where you're running: pick the mode first
 
-`init` creates the folders below (names follow the workspace language, English or Spanish). It writes the language to a hidden `.travel-agent.json`, and `ta` finds that file automatically from any path inside the workspace.
+**Folder mode (Claude Code, or Cowork with a folder selected).** You can read and write the agent's own files, so everything lives in their agency folder.
+
+**Chat mode (Claude on the web, desktop Chat tab, or mobile).** You run in a sandbox and can't see the agent's computer. You're in chat mode if the agent attached files to the conversation, or if there's an uploads/outputs folder such as `/mnt/user-data/`. In chat mode:
+
+- **Files come in as attachments.** Look in the uploads folder (often `/mnt/user-data/uploads`). Uploaded files may be read-only, so **copy a workbook to the outputs folder before updating it** and update the copy.
+- **Files go out as downloads.** Save every file you produce, including updated Trip Sheets, in the outputs folder (often `/mnt/user-data/outputs`), so the agent can download it. Use the same human file name as the original.
+- **The agent keeps the files.** After updating a Trip Sheet or the Providers workbook, say clearly: *"Download the updated file and replace your copy."* At the start of trip work, ask them to attach the latest Trip Sheet (and the Providers & Commissions workbook for commissions).
+- **New workspace or trip:** run `ta init` and `ta new-trip` in a scratch folder (e.g. `/tmp/agency`), then copy the new workbook(s) to outputs. Tell the agent which folder on their computer to save each one in, using the layout below. They can create the folders themselves, or you can zip the scratch folder for them.
+- **Across many clients** ("what's due this week?"), the agent has to attach every active Trip Sheet. If they do this often, mention that **Cowork** in the Claude desktop app can work directly in their agency folder.
+
+## Workspace layout
+
+`init` creates the folders below (names follow the workspace language, English or Spanish). It writes the language to a hidden `.travel-agent.json`, and `ta` finds that file automatically from any path inside the workspace. A workbook's own sheet names tell `ta` its language, so a single uploaded file works without the workspace.
 
 ```
 <agency folder>/
@@ -35,24 +47,24 @@ Read **PDFs** (vouchers, confirmations, rate sheets, passports) with your own Re
 └── Destinations|Destinos/
 ```
 
-If there's no workspace yet, ask where the agent keeps client files (e.g. `~/Documents/Agencia`) and which language they want, then run `init`.
+In folder mode, if there's no workspace yet, ask where the agent keeps client files (e.g. `~/Documents/Agencia`) and which language they want, then run `init`.
 
 ## Updating workbooks
 
 - JSON keys are section names: `trip` (object), plus `travelers`, `bookings`, `payments` and `deadlines` (lists of objects). For the providers workbook they're `settings`, `providers`, `products` and `incentives`. Get the field keys from `read-trip`/`read-providers` output.
 - Rows are **merged** by key: bookings by `id`, travelers by `name`, payments by `booking`+`description`, deadlines by `date`+`what`, providers by `id`, and products by `provider_id`+`product_id`. A row with a new key is appended. To overwrite a whole section, add `--replace bookings`.
 - Dates: `YYYY-MM-DD` (DD/MM/YYYY is also accepted). Dropdown fields take the code (`booked`, `client`, `percentage`…) or the label in either language.
-- If `ta` says the file is **open in Excel or Word**, ask the agent to close it. Never work around this, because their unsaved edits would be lost.
+- In folder mode, if `ta` says the file is **open in Excel or Word**, ask the agent to close it. Never work around this, because their unsaved edits would be lost.
 - After any update, briefly tell the agent what changed (e.g. "Added 3 bookings and 2 payments to the Trip Sheet").
 
 ## Producing documents
 
-1. Write the content as markdown in your scratchpad or temp directory. The supported formatting is headings, bold/italic, bullets, numbered lists, `- [ ]` checkboxes, tables, `>` quotes and links.
-2. Run `ta docx draft.md "<trip folder>/<subfolder>/<Nice Name>.docx" [--pdf]`.
+1. Write the content as markdown in a temp directory. The supported formatting is headings, bold/italic, bullets, numbered lists, `- [ ]` checkboxes, tables, `>` quotes and links.
+2. Run `ta docx draft.md "<destination>/<Nice Name>.docx" [--pdf]`. In folder mode the destination is the right trip subfolder; in chat mode it's the outputs folder.
    - Use **`--pdf` for anything going to a client.** The PDF is generated directly and doesn't need Word.
    - Add `--footer "<agency name> · <license/legajo>"` when `agency_name` is set in the providers workbook Settings sheet.
 3. Name files the way a person would: `Questionnaire - María Pérez.docx`, `Cuestionario - María Pérez.docx`, `Trip Summary 2026-10-14.pdf`. Don't use slugs.
-4. Never leave the markdown draft in the agency folder.
+4. Never leave the markdown draft in the agency folder or the outputs folder.
 5. Status markers ✅ 🔴 🟡 ⚪ render correctly in both the Word document and the PDF.
 
 ## Privacy

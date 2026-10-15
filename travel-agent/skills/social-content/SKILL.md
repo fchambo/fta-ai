@@ -7,7 +7,7 @@ description: Create social media content for a freelance travel agent, including
 
 Content that builds trust in the agent as *the* expert and gets people to message them. It shouldn't read like a generic travel-inspiration account.
 
-First read `${CLAUDE_PLUGIN_ROOT}/references/workspace.md`. In this skill and that file, `ta` means `"${CLAUDE_PLUGIN_ROOT}/bin/ta"`. Always call it with that full path, quoted.
+First read `references/workspace.md` in this skill's folder (`${CLAUDE_SKILL_DIR}/references/workspace.md`): it says how to work in **folder mode** (Claude Code, Cowork) and **chat mode** (Claude chat, where files come as attachments and go back as downloads). In this skill and that file, `ta` means `python3 "${CLAUDE_SKILL_DIR}/scripts/ta.py"`. If that path doesn't resolve, as can happen in Claude chat where the skill folder is copied into the sandbox, use `scripts/ta.py` inside the copied skill folder.
 
 ## First time: brand profile
 

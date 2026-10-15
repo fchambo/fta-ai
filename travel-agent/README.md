@@ -13,10 +13,18 @@ Agents keep working in **Excel, Word and PDF**. Claude reads their vouchers, con
 
 ## Install
 
+**Claude chat or Cowork** (web or desktop app): open **Customize → Plugins → Add**, then either:
+- **Add marketplace** and enter `fchambo/fta-claude-plugin`, then add **Travel Agent**, or
+- **Upload plugin** and select `travel-agent.zip`.
+
+**Claude Code:**
+
 ```bash
 claude plugin marketplace add fchambo/fta-claude-plugin
 claude plugin install travel-agent@fta-marketplace
 ```
+
+In **Claude chat**, attach your files (Trip Sheet, vouchers, contracts) to the conversation and download the files Claude returns. In **Cowork** and **Claude Code**, Claude works directly in your agency folder.
 
 The first time a skill needs files, Claude asks where the agent keeps client files and whether they work in English or Spanish, then sets up:
 
@@ -34,10 +42,11 @@ Spreadsheets have dropdowns, real Excel dates and frozen headers, so the agent c
 
 ## Requirements
 
-Python 3 (preinstalled on macOS; on Windows, get it from python.org). On first use, `bin/ta` creates a private environment with `openpyxl`, `python-docx` and `reportlab`. Nothing else to install, and PDFs are generated without Word.
+Nothing to install in Claude chat. In Cowork and Claude Code, Python 3 is needed (preinstalled on macOS; on Windows get it from python.org). The first time, the plugin installs its libraries (`openpyxl`, `python-docx`, `reportlab`) into a private folder. PDFs are generated without Word.
 
 ## For developers
 
-- `bin/ta`: CLI entry point (`ta --help`)
-- `lib/travel_agent_tools/schema.py`: every sheet, column and dropdown (EN/ES) is defined in this one file
-- `references/workspace.md`: shared conventions every skill reads
+- Shared code lives in `tools/` at the repository root. Each skill carries its own copy in `scripts/` and `references/workspace.md`, because in Claude chat a skill only sees its own folder. After editing `tools/`, run `python3 tools/build.py`. CI-style check: `python3 tools/build.py --check`.
+- `tools/travel_agent_tools/schema.py`: every sheet, column and dropdown (EN/ES)
+- `tools/workspace.md`: shared rules every skill reads (folder mode vs chat mode)
+- Don't add a top-level `bin/` folder: Claude chat and Cowork refuse plugins that have one.
