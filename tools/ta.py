@@ -40,8 +40,12 @@ def run_in_private_env():
         if python is None:
             subprocess.run([sys.executable, "-m", "venv", venv], check=True, stdout=sys.stderr)
             python = venv_python(venv)
-        subprocess.run([python, "-m", "pip", "install", "--quiet", "--disable-pip-version-check", *REQUIREMENTS],
-                       check=True, stdout=sys.stderr)
+        try:
+            subprocess.run([python, "-m", "pip", "install", "--quiet", "--disable-pip-version-check", *REQUIREMENTS],
+                           check=True, stdout=sys.stderr)
+        except subprocess.CalledProcessError:
+            sys.exit("travel-agent tools: couldn't install openpyxl, python-docx and reportlab here "
+                     "(no internet access?). Install them with pip, or run where they're available.")
         open(os.path.join(venv, READY_MARKER), "w").close()
     env = {**os.environ, "TA_PRIVATE_ENV": "1"}
     sys.exit(subprocess.call([python, os.path.abspath(__file__), *sys.argv[1:]], env=env))

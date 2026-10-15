@@ -19,19 +19,32 @@ All file work goes through one Python script, `ta.py`, in this skill's `scripts/
 | `ta xlsx '<json>' <out.xlsx>` | Generic tables → Excel file (`[{name, columns, rows}]`) |
 | `ta read-doc <file.docx/.xlsx>` | Extract the text of a Word or Excel file |
 
-Read **PDFs** (vouchers, confirmations, rate sheets, passports) with your own Read tool. Read images (screenshots of WhatsApp chats or tickets) the same way.
+Read **PDFs** (vouchers, confirmations, rate sheets, passports) and images (screenshots of WhatsApp chats or tickets) with your own file-reading ability.
 
 ## Where you're running: pick the mode first
 
+<!-- only:claude -->
 **Folder mode (Claude Code, or Cowork with a folder selected).** You can read and write the agent's own files, so everything lives in their agency folder.
 
 **Chat mode (Claude on the web, desktop Chat tab, or mobile).** You run in a sandbox and can't see the agent's computer. You're in chat mode if the agent attached files to the conversation, or if there's an uploads/outputs folder such as `/mnt/user-data/`. In chat mode:
 
 - **Files come in as attachments.** Look in the uploads folder (often `/mnt/user-data/uploads`). Uploaded files may be read-only, so **copy a workbook to the outputs folder before updating it** and update the copy.
 - **Files go out as downloads.** Save every file you produce, including updated Trip Sheets, in the outputs folder (often `/mnt/user-data/outputs`), so the agent can download it. Use the same human file name as the original.
+<!-- /only -->
+<!-- only:chatgpt -->
+**You're in ChatGPT, so you always work in chat mode.** You run in a sandbox and can't see the agent's computer. Ignore anything below that applies only to folder mode.
+
+- **Files come in as attachments.** Files the agent attaches are in the sandbox, usually under `/mnt/data`. Before updating a workbook, **copy it to a new file in `/mnt/data`** (same human file name) and update the copy.
+- **Files go out as downloads.** Save every file you produce, including updated Trip Sheets, in `/mnt/data`, and give the agent a download link for each one. Use the same human file name as the original.
+<!-- /only -->
 - **The agent keeps the files.** After updating a Trip Sheet or the Providers workbook, say clearly: *"Download the updated file and replace your copy."* At the start of trip work, ask them to attach the latest Trip Sheet (and the Providers & Commissions workbook for commissions).
-- **New workspace or trip:** run `ta init` and `ta new-trip` in a scratch folder (e.g. `/tmp/agency`), then copy the new workbook(s) to outputs. Tell the agent which folder on their computer to save each one in, using the layout below. They can create the folders themselves, or you can zip the scratch folder for them.
+- **New workspace or trip:** run `ta init` and `ta new-trip` in a scratch folder (e.g. `/tmp/agency`), then copy the new workbook(s) to the folder you hand files out from. Tell the agent which folder on their computer to save each one in, using the layout below. They can create the folders themselves, or you can zip the scratch folder for them.
+<!-- only:claude -->
 - **Across many clients** ("what's due this week?"), the agent has to attach every active Trip Sheet. If they do this often, mention that **Cowork** in the Claude desktop app can work directly in their agency folder.
+<!-- /only -->
+<!-- only:chatgpt -->
+- **Across many clients** ("what's due this week?"), the agent has to attach every active Trip Sheet. Suggest they keep their active Trip Sheets together in one folder on their computer, so attaching them all takes one step.
+<!-- /only -->
 
 ## Workspace layout
 
@@ -120,7 +133,7 @@ Agent-facing text defaults to the agent's own form. Use neutral Spanish when you
 ## Producing documents
 
 1. Write the content as markdown in a temp directory. The supported formatting is headings, bold/italic, bullets, numbered lists, `- [ ]` checkboxes, tables, `>` quotes and links.
-2. Run `ta docx draft.md "<destination>/<Nice Name>.docx" [--pdf]`. In folder mode the destination is the right trip subfolder; in chat mode it's the outputs folder.
+2. Run `ta docx draft.md "<destination>/<Nice Name>.docx" [--pdf]`. In folder mode the destination is the right trip subfolder; in chat mode it's the folder you hand files out from.
    - Use **`--pdf` for anything going to a client.** The PDF is generated directly and doesn't need Word.
    - Add `--footer "<agency name> · <license/legajo>"` when `agency_name` is set in the providers workbook Settings sheet.
 3. Name files the way a person would, using the file-name table in **Language**. Don't use slugs.

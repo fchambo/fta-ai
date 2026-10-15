@@ -19,9 +19,13 @@ claude plugin install travel-agent@fta-marketplace
 
 Python 3 is needed for Cowork and Claude Code ([python.org](https://www.python.org/downloads/); on Windows tick **"Add python.exe to PATH"**). Nothing is needed for Claude chat.
 
-## Build the upload zip
+**In ChatGPT (Plus and above):** build the skill zips (below), then in ChatGPT open **Skills** and upload each of the six zips with **Upload from your computer**. In ChatGPT the agent attaches files to the chat and downloads the files ChatGPT returns. The Spanish slash commands are Claude-only, but Spanish requests work in both.
+
+## Build the upload zips
 
 ```bash
-python3 tools/build.py
-cd travel-agent && zip -r ../travel-agent.zip . -x "*/__pycache__/*" "*.DS_Store"
+python3 tools/build.py --chatgpt   # updates the Claude skills and writes dist/chatgpt/<skill>.zip
+cd travel-agent && zip -r ../travel-agent.zip . -x "*/__pycache__/*" "*.DS_Store"   # Claude plugin zip
 ```
+
+One repository serves both: `tools/` holds the shared code and rules, and `tools/workspace.md` marks Claude-only and ChatGPT-only passages with `<!-- only:claude -->` / `<!-- only:chatgpt -->` blocks.
