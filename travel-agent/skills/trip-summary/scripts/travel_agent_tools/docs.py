@@ -192,7 +192,10 @@ def _pdf_inline(text):
             out.append(f"<b>{escape(part[2:-2])}</b>")
         elif part.startswith("[") and "](" in part:
             label, url = part[1:-1].split("](", 1)
-            out.append(f'<link href="{escape(url)}" color="blue">{escape(label)}</link>')
+            if re.match(r"(?i)^(https?:|mailto:|tel:)", url.strip()):
+                out.append(f'<link href="{escape(url.strip(), {chr(34): "&quot;"})}" color="blue">{escape(label)}</link>')
+            else:  # file:, javascript: and the like are shown as plain text, never as links
+                out.append(escape(f"{label} ({url})"))
         elif part.startswith("*") and part.endswith("*") and len(part) > 2:
             out.append(f"<i>{escape(part[1:-1])}</i>")
         else:

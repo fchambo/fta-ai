@@ -1,5 +1,6 @@
 """Create, read and update the agent-facing Excel workbooks."""
 import os
+import re
 from datetime import date, datetime
 
 from openpyxl import Workbook, load_workbook
@@ -298,10 +299,10 @@ def write_tables(path, sheets):
     wb = Workbook()
     wb.remove(wb.active)
     for sheet in sheets:
-        ws = wb.create_sheet(str(sheet["name"])[:31])
+        ws = wb.create_sheet(re.sub(r"[\\/*?:\[\]]", "-", str(sheet["name"]))[:31] or "Sheet")
         cols = sheet["columns"]
         for c, name in enumerate(cols, start=1):
-            cell = ws.cell(row=1, column=c, value=name)
+            cell = set_cell(ws, 1, c, name)
             cell.fill, cell.font = HEADER_FILL, HEADER_FONT
             ws.column_dimensions[get_column_letter(c)].width = max(12, min(48, len(str(name)) + 4))
         for r, row in enumerate(sheet.get("rows") or [], start=2):
