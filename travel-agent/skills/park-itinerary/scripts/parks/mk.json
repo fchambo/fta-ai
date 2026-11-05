@@ -8,6 +8,14 @@
   "entrance": [50, 3],
   "landmark": {"name": "Cinderella Castle", "x": 50, "y": 46},
   "data_checked": "2026-11",
+  "osm": {
+    "bbox": [28.4145, -81.5875, 28.4235, -81.5755],
+    "boundary_way": 297428432,
+    "entrance": [28.41639, -81.581192],
+    "landmark": [28.419524, -81.581175],
+    "names": {"meet-mickey": "Town Square Theater", "petes-sideshow": "Pete's Silly Sideshow", "small-world": "it's a small world", "little-mermaid": "Under the Sea - Journey of the Little Mermaid", "tron": "TRON Lightcycle Run", "peoplemover": "Tomorrowland Transit Authority PeopleMover"},
+    "points": {"festival-fantasy": [28.4176, -81.58118], "starlight-parade": [28.4176, -81.58118], "happily-ever-after": [28.4187, -81.58118]}
+  },
   "lands": [
     {"name": "Main Street, U.S.A.", "x": 42, "y": 5, "w": 16, "h": 32, "color": "#F3D9A4"},
     {"name": "Adventureland", "x": 10, "y": 28, "w": 28, "h": 20, "color": "#BFE3A6"},

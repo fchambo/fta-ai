@@ -1,5 +1,6 @@
 """Client PDF for a park plan: cover, booking calendar, then one section per park day
-with a schematic map of the route, the fixed-time table and the full schedule."""
+with a map of the route (real park layout from OpenStreetMap when available), the fixed-time table and the full schedule."""
+import math
 from datetime import date
 from xml.sax.saxutils import escape
 
@@ -52,6 +53,7 @@ L = {
     "legend_fixed": ("Fixed time", "Horario fijo"), "legend_flex": ("Flexible order", "Orden flexible"),
     "legend_route": ("Walking route", "Recorrido a pie"), "legend_entrance": ("Entrance", "Entrada"),
     "schematic": ("Schematic map, not to scale", "Mapa esquemático, no a escala"),
+    "osm_credit": ("Map: © OpenStreetMap contributors", "Mapa: © colaboradores de OpenStreetMap"),
     "arrive_step": ("Arrive at the entrance", "Llegada a la entrada"),
     "arrive_early": ("Arrive at the entrance (Early Entry for hotel guests)", "Llegada a la entrada (Early Entry para huéspedes)"),
     "leave_step": ("Head to the exit", "Salida del parque"),
@@ -117,7 +119,9 @@ FLAG = {
 WEEKDAYS = (("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"), ("lun", "mar", "mié", "jue", "vie", "sáb", "dom"))
 MONTHS_ES = ("ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic")
 
-FIXED_COLOR, FLEX_COLOR, ROUTE_COLOR = "#EA580C", "#0F766E", "#0F766E"
+FIXED_COLOR, FLEX_COLOR, ROUTE_COLOR = "#EA580C", "#0F766E", "#4150F7"
+ARROW_COLOR = "#16A34A"
+ROUTE_DOTS = [0.1, 4]
 
 
 def tr(lang, key, **kw):
@@ -188,7 +192,237 @@ def height_text(p):
 
 # --- map -------------------------------------------------------------------------
 
+def _clip_poly(pts, x0, y0, x1, y1):
+    """Sutherland-Hodgman: clip a polygon to a rectangle."""
+    def cut(pts, inside, cross):
+        out = []
+        for i, cur in enumerate(pts):
+            prev = pts[i - 1]
+            if inside(cur):
+                if not inside(prev):
+                    out.append(cross(prev, cur))
+                out.append(cur)
+            elif inside(prev):
+                out.append(cross(prev, cur))
+        return out
+
+    def at_x(x):
+        return lambda p, q: (x, p[1] + (q[1] - p[1]) * (x - p[0]) / ((q[0] - p[0]) or 1e-9))
+
+    def at_y(y):
+        return lambda p, q: (p[0] + (q[0] - p[0]) * (y - p[1]) / ((q[1] - p[1]) or 1e-9), y)
+
+    for inside, cross in ((lambda p: p[0] >= x0, at_x(x0)), (lambda p: p[0] <= x1, at_x(x1)),
+                          (lambda p: p[1] >= y0, at_y(y0)), (lambda p: p[1] <= y1, at_y(y1))):
+        if not pts:
+            break
+        pts = cut(pts, inside, cross)
+    return pts
+
+
+def _clip_line(pts, x0, y0, x1, y1):
+    """Split a polyline into the pieces inside a rectangle (Liang-Barsky per segment)."""
+    pieces, cur = [], []
+    for p, q in zip(pts, pts[1:]):
+        dx, dy = q[0] - p[0], q[1] - p[1]
+        t0, t1, ok = 0.0, 1.0, True
+        for pk, qk in ((-dx, p[0] - x0), (dx, x1 - p[0]), (-dy, p[1] - y0), (dy, y1 - p[1])):
+            if pk == 0:
+                if qk < 0:
+                    ok = False
+            else:
+                r = qk / pk
+                if pk < 0:
+                    t0 = max(t0, r)
+                else:
+                    t1 = min(t1, r)
+        if not ok or t0 > t1:
+            if len(cur) > 1:
+                pieces.append(cur)
+            cur = []
+            continue
+        a = (p[0] + t0 * dx, p[1] + t0 * dy)
+        b = (p[0] + t1 * dx, p[1] + t1 * dy)
+        if not cur or cur[-1] != a:
+            if len(cur) > 1:
+                pieces.append(cur)
+            cur = [a]
+        cur.append(b)
+        if t1 < 1:
+            pieces.append(cur)
+            cur = []
+    if len(cur) > 1:
+        pieces.append(cur)
+    return pieces
+
+
+def _osm_map(park, day, lang, font, width, net):
+    """The park's real layout (OpenStreetMap) with the day's route along the walkways."""
+    from reportlab.graphics.shapes import Circle, Drawing, Line, Polygon, PolyLine, Rect, String
+    from reportlab.lib import colors
+    from reportlab.pdfbase.pdfmetrics import stringWidth
+
+    data = net.data
+    stops = [s for s in day["steps"] if s.get("x") is not None and s["kind"] != "free"]
+    # route along the walkways, stop to stop
+    route = []
+    for a, b in zip(stops, stops[1:]):
+        seg = net.path((a["x"], a["y"]), (b["x"], b["y"]))
+        route.extend(seg if not route else seg[1:])
+
+    # frame: the guest area (every attraction and the entrance), widened to the map's aspect
+    keep = [net.nodes[i] for i in data["places"].values()] + [net.nodes[data["entrance"]]] + route
+    pad = 45
+    x0, x1 = min(p[0] for p in keep) - pad, max(p[0] for p in keep) + pad
+    y0, y1 = min(p[1] for p in keep) - pad, max(p[1] for p in keep) + pad
+    ratio = min(1.0, max(0.62, (y1 - y0) / (x1 - x0)))
+    height = width * ratio
+    legend_h = 22
+    if (y1 - y0) / (x1 - x0) < ratio:
+        grow = (x1 - x0) * ratio - (y1 - y0)
+        y0, y1 = y0 - grow / 2, y1 + grow / 2
+    else:
+        grow = (y1 - y0) / ratio - (x1 - x0)
+        x0, x1 = x0 - grow / 2, x1 + grow / 2
+    k = width / (x1 - x0)
+
+    def xy(p):
+        return (p[0] - x0) * k, legend_h + (p[1] - y0) * k
+
+    d = Drawing(width, height + legend_h)
+    d.add(Rect(0, legend_h, width, height, fillColor=colors.HexColor("#E4E9DA"), strokeColor=None))
+
+    def area(pts, fill, stroke=None, sw=0.3):
+        clipped = _clip_poly([tuple(p) for p in pts], x0, y0, x1, y1)
+        if len(clipped) >= 3:
+            d.add(Polygon([c for p in clipped for c in xy(p)], fillColor=colors.HexColor(fill),
+                          strokeColor=colors.HexColor(stroke) if stroke else None, strokeWidth=sw))
+
+    def line(pts, color, w, dash=None):
+        for piece in _clip_line([tuple(p) for p in pts], x0, y0, x1, y1):
+            d.add(PolyLine([c for p in piece for c in xy(p)], strokeColor=colors.HexColor(color), strokeWidth=w,
+                           strokeLineCap=1, strokeLineJoin=1, strokeDashArray=dash))
+
+    area(data["outline"], "#F5F1E8", "#C9C2B3", 0.5)
+    for p in data["areas"]["green"]:
+        area(p, "#D3E6C5")
+    for p in data["areas"]["plaza"]:
+        area(p, "#EFE9DC")
+    for p in data["areas"]["water"]:
+        area(p, "#B5DAF2", "#93C5E8", 0.3)
+    for p in data["areas"]["building"]:
+        area(p, "#DDD6CA")
+    for p in data["attractions"]:
+        area(p, "#F1D6A6", "#E2BC7E", 0.3)
+    for p in data["paths"]:
+        line(p, "#FFFFFF", max(1.0, 3.2 * k))
+
+    # route: dotted line, green arrows every ~70 m
+    accent = colors.HexColor(ROUTE_COLOR)
+    if len(route) > 1:
+        line(route, ROUTE_COLOR, 2.8, ROUTE_DOTS)
+        walked = 0.0
+        for p, q in zip(route, route[1:]):
+            seg = math.dist(p, q)
+            walked += seg
+            if walked < 70 or seg < 6:
+                continue
+            walked = 0.0
+            (px, py), (qx, qy) = xy(p), xy(q)
+            length = math.hypot(qx - px, qy - py) or 1
+            ux, uy = (qx - px) / length, (qy - py) / length
+            mx, my = (px + qx) / 2, (py + qy) / 2
+            d.add(Polygon([mx + ux * 5, my + uy * 5, mx - ux * 3.5 - uy * 3.6, my - uy * 3.5 + ux * 3.6,
+                           mx - ux * 3.5 + uy * 3.6, my - uy * 3.5 - ux * 3.6], fillColor=colors.HexColor(ARROW_COLOR),
+                          strokeColor=colors.white, strokeWidth=0.7, strokeLineJoin=1))
+    ex, ey = xy(net.nodes[data["entrance"]])
+    d.add(Rect(ex - 5, ey - 4, 10, 8, fillColor=colors.HexColor("#111827"), strokeColor=None))
+    label = tr(lang, "legend_entrance")
+    d.add(Rect(ex + 7, ey - 4, stringWidth(label, font, 6.4) + 4, 9, fillColor=colors.white, strokeColor=None))
+    d.add(String(ex + 9, ey - 2, label, fontName=font, fontSize=6.4, fillColor=colors.HexColor("#111827")))
+
+    # numbered pins, then labels placed where they don't cover another pin or label
+    boxes = [(ex - 6, ey - 5, ex + 9 + stringWidth(label, font, 6.4) + 4, ey + 5)]
+    pins = []
+    for s in day["steps"]:
+        if s.get("n") is None or s.get("x") is None or s.get("auto") or s["kind"] in ("break",):
+            continue
+        cx, cy = xy(net.nodes[net.node((s["x"], s["y"]))])
+        while any(abs(cx - px) < 13 and abs(cy - py) < 13 for px, py, _ in pins):
+            cy -= 14
+        pins.append((cx, cy, s))
+        boxes.append((cx - 7, cy - 7, cx + 7, cy + 7))
+
+    def hits(box):
+        return sum(1 for b in boxes if box[0] < b[2] and b[0] < box[2] and box[1] < b[3] and b[1] < box[3])
+
+    def free_spot(options):
+        inside = [o for o in options if o[0] >= 1 and o[2] <= width - 1 and o[1] >= legend_h + 1 and o[3] <= legend_h + height - 1]
+        return min(inside or options, key=hits)
+
+    for cx, cy, s in pins:
+        color = colors.HexColor(FIXED_COLOR if s.get("fixed") else FLEX_COLOR)
+        label = short_name(s.get("short") or s.get("name") or "")
+        if label:
+            w = stringWidth(label, font, 6) + 4
+            box = free_spot([(cx + 8, cy - 4.3, cx + 8 + w, cy + 4.3), (cx - 8 - w, cy - 4.3, cx - 8, cy + 4.3),
+                             (cx - w / 2, cy + 8, cx + w / 2, cy + 16.6), (cx - w / 2, cy - 16.6, cx + w / 2, cy - 8),
+                             (cx + 6, cy + 5, cx + 6 + w, cy + 13.6), (cx + 6, cy - 13.6, cx + 6 + w, cy - 5),
+                             (cx - 6 - w, cy + 5, cx - 6, cy + 13.6), (cx - 6 - w, cy - 13.6, cx - 6, cy - 5)])
+            boxes.append(box)
+            d.add(Rect(box[0], box[1], w, 8.6, rx=2, ry=2, fillColor=colors.Color(1, 1, 1, alpha=0.9), strokeColor=None))
+            d.add(String(box[0] + 2, box[1] + 2.2, label, fontName=font, fontSize=6, fillColor=colors.HexColor("#1F2937")))
+        d.add(Circle(cx, cy, 6.5, fillColor=color, strokeColor=colors.white, strokeWidth=1.2))
+        d.add(String(cx, cy - 2.6, str(s["n"]), fontName=font, fontSize=7, textAnchor="middle", fillColor=colors.white))
+
+    # land names and the landmark, on top of the route but out of the way of pins and labels
+    by_land = {}
+    for a in park["attractions"]:
+        if a["id"] in data["places"] and a.get("type") not in ("parade", "fireworks"):
+            by_land.setdefault(a["land"], []).append(net.nodes[data["places"][a["id"]]])
+    marks = [(short_land(land).upper(), (sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts)), 6.2, "#7C6F5B")
+             for land, pts in by_land.items()]
+    mark = park.get("landmark")
+    if mark and data.get("landmark"):
+        cx, cy = xy(data["landmark"])
+        d.add(Polygon([cx, cy + 6, cx - 5, cy - 4, cx + 5, cy - 4], fillColor=colors.HexColor("#6B7280"), strokeColor=None))
+        marks = [m for m in marks if m[0] != mark["name"].upper()]
+        marks.insert(0, (mark["name"], data["landmark"], 6, "#374151"))
+    for text, pt, size, ink in marks:
+        cx, cy = xy(pt)
+        w = stringWidth(text, font, size) + 4
+        box = free_spot([(cx - w / 2 + dx, cy + dy, cx + w / 2 + dx, cy + dy + size + 2.4)
+                         for dy in (-14, 8, -26, 20, -38, 32) for dx in (0, -w / 2, w / 2)])
+        if hits(box) > 0:
+            continue
+        boxes.append(box)
+        d.add(Rect(box[0], box[1], w, size + 2.4, rx=2, ry=2, fillColor=colors.Color(1, 1, 1, alpha=0.7), strokeColor=None))
+        d.add(String(box[0] + 2, box[1] + 1.8, text, fontName=font, fontSize=size, fillColor=colors.HexColor(ink)))
+
+    # scale bar and legend
+    bar = 100 * k
+    d.add(Line(width - 8 - bar, legend_h + 8, width - 8, legend_h + 8, strokeColor=colors.HexColor("#374151"), strokeWidth=1.2))
+    d.add(String(width - 8 - bar / 2, legend_h + 11, "100 m", fontName=font, fontSize=6, textAnchor="middle",
+                 fillColor=colors.HexColor("#374151")))
+    d.add(Rect(0, legend_h, width, height, fillColor=None, strokeColor=colors.HexColor("#D4D4D4"), strokeWidth=0.6))
+    y, x = 8, 4
+    for color, key in ((FIXED_COLOR, "legend_fixed"), (FLEX_COLOR, "legend_flex")):
+        d.add(Circle(x + 4, y + 2.5, 4, fillColor=colors.HexColor(color), strokeColor=None))
+        d.add(String(x + 11, y, tr(lang, key), fontName=font, fontSize=7))
+        x += 22 + len(tr(lang, key)) * 3.6
+    d.add(Line(x, y + 2.5, x + 18, y + 2.5, strokeColor=accent, strokeWidth=2.8, strokeLineCap=1,
+               strokeDashArray=ROUTE_DOTS))
+    d.add(Polygon([x + 12, y + 2.5, x + 7, y + 5.5, x + 7, y - 0.5], fillColor=colors.HexColor(ARROW_COLOR), strokeColor=None))
+    d.add(String(x + 22, y, tr(lang, "legend_route"), fontName=font, fontSize=7))
+    d.add(String(width - 4, y, tr(lang, "osm_credit"), fontName=font, fontSize=6.5, textAnchor="end",
+                 fillColor=colors.HexColor("#6B7280")))
+    return d
+
+
 def park_map(park, day, lang, font, width):
+    net = P.walk_net(park)
+    if net is not None:
+        return _osm_map(park, day, lang, font, width, net)
     from reportlab.graphics.shapes import Circle, Drawing, Ellipse, Line, Polygon, PolyLine, Rect, String
     from reportlab.lib import colors
 

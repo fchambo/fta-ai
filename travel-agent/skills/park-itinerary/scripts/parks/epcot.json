@@ -8,6 +8,13 @@
   "entrance": [50, 2],
   "landmark": {"name": "Spaceship Earth", "x": 50, "y": 15},
   "data_checked": "2026-11",
+  "osm": {
+    "bbox": [28.364, -81.557, 28.378, -81.542],
+    "boundary_way": 805298160,
+    "entrance": [28.3762, -81.5494],
+    "landmark": "Spaceship Earth",
+    "names": {"mission-space-orange": "Mission: SPACE", "mission-space-green": "Mission: SPACE", "gran-fiesta": "Gran Fiesta Tour Starring the Three Caballeros", "remy": "Remy's Ratatouille Adventure", "luminous": "Luminous The Symphony of Us"}
+  },
   "lands": [
     {"name": "World Celebration", "x": 36, "y": 4, "w": 28, "h": 26, "color": "#F3D9A4"},
     {"name": "World Discovery", "x": 64, "y": 8, "w": 32, "h": 32, "color": "#CDD5FD"},
