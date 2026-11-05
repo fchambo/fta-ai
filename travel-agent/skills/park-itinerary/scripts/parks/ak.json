@@ -1,0 +1,40 @@
+{
+  "id": "ak",
+  "name": "Disney's Animal Kingdom",
+  "resort": "Walt Disney World",
+  "operator": "disney",
+  "ll_tiers": true,
+  "meters_per_unit": 11,
+  "entrance": [50, 2],
+  "landmark": {"name": "Tree of Life", "x": 50, "y": 48},
+  "data_checked": "2026-11",
+  "lands": [
+    {"name": "The Oasis", "x": 42, "y": 4, "w": 16, "h": 16, "color": "#BFE3A6"},
+    {"name": "Discovery Island", "x": 36, "y": 34, "w": 28, "h": 28, "color": "#F3D9A4"},
+    {"name": "Pandora – The World of Avatar", "x": 2, "y": 20, "w": 34, "h": 30, "color": "#C9C2F2"},
+    {"name": "Africa", "x": 8, "y": 60, "w": 40, "h": 37, "color": "#E9C79C"},
+    {"name": "Asia", "x": 56, "y": 58, "w": 42, "h": 39, "color": "#F6C9E0"},
+    {"name": "DinoLand U.S.A.", "x": 64, "y": 20, "w": 34, "h": 32, "color": "#D6CFC4"}
+  ],
+  "water": [{"x": 50, "y": 28, "rx": 9, "ry": 2.5}],
+  "attractions": [
+    {"id": "flight-passage", "name": "Avatar Flight of Passage", "short": "Flight of Passage", "land": "Pandora – The World of Avatar", "x": 9, "y": 31, "type": "ride", "min": 6, "height_in": 44, "thrill": 2, "tags": ["sim", "heights", "enclosed"], "lane": "single", "peak": 90, "rope": true, "access": "transfer", "status_note": "Riders straddle a motorbike-style seat with restraints closing on the back and calves: guests with claustrophobia often find it confining."},
+    {"id": "navi-river", "name": "Na'vi River Journey", "land": "Pandora – The World of Avatar", "x": 24, "y": 27, "type": "ride", "min": 5, "thrill": 0, "tags": ["dark", "boat"], "lane": "t1", "peak": 55, "rope": true, "access": "transfer"},
+    {"id": "safaris", "name": "Kilimanjaro Safaris", "land": "Africa", "x": 16, "y": 85, "type": "ride", "min": 20, "thrill": 1, "tags": ["animals", "bumpy"], "lane": "t1", "peak": 40, "rope": true, "access": "wheelchair", "status_note": "Animals are most active early in the morning and late afternoon."},
+    {"id": "gorilla-falls", "name": "Gorilla Falls Exploration Trail", "short": "Gorilla Falls Trail", "land": "Africa", "x": 30, "y": 84, "type": "walk", "min": 25, "thrill": 0, "tags": ["animals"], "lane": null, "peak": 0, "access": "wheelchair"},
+    {"id": "lion-king", "name": "Festival of the Lion King", "land": "Africa", "x": 40, "y": 69, "type": "show", "min": 30, "thrill": 0, "tags": ["loud"], "lane": "t2", "peak": 15, "access": "wheelchair"},
+    {"id": "everest", "name": "Expedition Everest – Legend of the Forbidden Mountain", "short": "Expedition Everest", "land": "Asia", "x": 88, "y": 68, "type": "ride", "min": 4, "height_in": 44, "thrill": 3, "tags": ["coaster", "dark", "backwards", "drops"], "lane": "t1", "peak": 50, "single_rider": true, "access": "transfer"},
+    {"id": "kali", "name": "Kali River Rapids", "land": "Asia", "x": 72, "y": 84, "type": "ride", "min": 7, "height_in": 38, "thrill": 2, "tags": ["wet", "spin", "drops"], "lane": "t2", "peak": 35, "access": "transfer", "status_note": "Riders get soaked: bring ponchos or a change of clothes."},
+    {"id": "maharajah", "name": "Maharajah Jungle Trek", "land": "Asia", "x": 62, "y": 80, "type": "walk", "min": 25, "thrill": 0, "tags": ["animals"], "lane": null, "peak": 0, "access": "wheelchair"},
+    {"id": "feathered-friends", "name": "Feathered Friends in Flight!", "short": "Feathered Friends", "land": "Asia", "x": 66, "y": 66, "type": "show", "min": 25, "thrill": 0, "tags": ["animals"], "lane": "t2", "peak": 10, "access": "wheelchair"},
+    {"id": "nemo-show", "name": "Finding Nemo: The Big Blue… and Beyond!", "short": "Finding Nemo show", "land": "DinoLand U.S.A.", "x": 72, "y": 36, "type": "show", "min": 25, "thrill": 0, "tags": ["dark"], "lane": "t2", "peak": 15, "access": "wheelchair"},
+    {"id": "dinosaur", "name": "DINOSAUR", "land": "DinoLand U.S.A.", "x": 88, "y": 30, "type": "ride", "min": 4, "height_in": 40, "thrill": 3, "tags": ["dark", "scary", "loud", "bumpy"], "lane": "t2", "peak": 25, "access": "transfer", "status": "closed", "status_note": "Announced to close in 2026 as DinoLand becomes Tropical Americas (Indiana Jones). Re-enable only if it's confirmed open."},
+    {"id": "zootopia", "name": "Zootopia: Better Zoogether! (Tree of Life theater)", "short": "Zootopia show", "land": "Discovery Island", "x": 50, "y": 52, "type": "show", "min": 10, "thrill": 0, "tags": ["3d", "loud"], "lane": "t2", "peak": 20, "access": "wheelchair"}
+  ],
+  "tips": [
+    "The park usually closes earlier than the others and there are no fireworks: plan a full morning and leave by mid-afternoon with small kids.",
+    "Rope drop Flight of Passage (or Na'vi River Journey) in Pandora; do Kilimanjaro Safaris early or late for active animals.",
+    "Lightning Lane Multi Pass is tiered here: 1 from Tier 1 and 2 from Tier 2.",
+    "Hot and humid with long walks: plan shaded shows (Lion King, Nemo, Zootopia) around midday."
+  ]
+}

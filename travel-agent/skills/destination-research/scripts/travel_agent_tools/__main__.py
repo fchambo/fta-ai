@@ -242,6 +242,37 @@ def cmd_read_doc(args):
     print(docs.read_text(args.file))
 
 
+def cmd_parks(args):
+    from . import parks
+    out([{"id": p["id"], "name": p["name"], "resort": p["resort"], "attractions": len(p["attractions"]),
+          "data_checked": p.get("data_checked")} for p in parks.load_parks().values()])
+
+
+def cmd_park_info(args):
+    from . import parks
+    park = parks.find_park(parks.load_parks(), args.park)
+    people = parks.prepare_party(load_json_arg(args.party)) if args.party else None
+    out(parks.park_info(park, people))
+
+
+def cmd_park_plan(args):
+    from . import parks
+    result = parks.plan(load_json_arg(args.request))
+    if args.out:
+        with open(args.out, "w", encoding="utf-8") as f:
+            json.dump(result, f, ensure_ascii=False, indent=2)
+    out(result)
+
+
+def cmd_park_pdf(args):
+    from . import parks_pdf
+    plan = load_json_arg(args.plan)
+    if args.lang:
+        plan["lang"] = args.lang
+    workbooks.ensure_closed(args.output)
+    out({"pdf": parks_pdf.render(plan, args.output, footer=args.footer, color=args.color)})
+
+
 def main():
     p = argparse.ArgumentParser(prog="ta")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -283,6 +314,18 @@ def main():
 
     s = sub.add_parser("pdf"); s.add_argument("file"); s.set_defaults(fn=cmd_pdf)
     s = sub.add_parser("read-doc"); s.add_argument("file"); s.set_defaults(fn=cmd_read_doc)
+
+    s = sub.add_parser("parks", help="List the theme parks with planning data"); s.set_defaults(fn=cmd_parks)
+    s = sub.add_parser("park-info", help="Attractions of one park; with --party, who can ride each one")
+    s.add_argument("park"); s.add_argument("--party", help="JSON list of travelers, or a path to one")
+    s.set_defaults(fn=cmd_park_info)
+    s = sub.add_parser("park-plan", help="Plan park days from a request JSON (see the park-itinerary skill)")
+    s.add_argument("request", help="JSON string or path to a .json file"); s.add_argument("--out", help="Also save the plan here")
+    s.set_defaults(fn=cmd_park_plan)
+    s = sub.add_parser("park-pdf", help="Plan JSON -> client PDF with maps and schedules")
+    s.add_argument("plan"); s.add_argument("output"); s.add_argument("--footer"); s.add_argument("--lang", choices=schema.LANGS)
+    s.add_argument("--color", default="0F766E")
+    s.set_defaults(fn=cmd_park_pdf)
 
     args = p.parse_args()
     try:

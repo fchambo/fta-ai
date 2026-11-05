@@ -18,6 +18,8 @@ All file work goes through one Python script, `ta.py`, in this skill's `scripts/
 | `ta docx <draft.md> <out.docx> [--pdf] [--footer "…"] [--title "…"]` | Your markdown → styled Word document (and PDF) |
 | `ta xlsx '<json>' <out.xlsx>` | Generic tables → Excel file (`[{name, columns, rows}]`) |
 | `ta read-doc <file.docx/.xlsx>` | Extract the text of a Word or Excel file |
+| `ta parks` · `park-info <park> [--party …]` | Theme parks with planning data, and who can ride what (park-itinerary skill only) |
+| `ta park-plan <request.json> [--out plan.json]` · `park-pdf <plan.json> <out.pdf>` | Plan park days, and render the client PDF with route maps (park-itinerary skill only) |
 
 Read **PDFs** (vouchers, confirmations, rate sheets, passports) and images (screenshots of WhatsApp chats or tickets) with your own file-reading ability.
 
@@ -85,6 +87,7 @@ Agent-facing text defaults to the agent's own form. Use neutral Spanish when you
 | Post drafts | `Posts - <Topic> - <YYYY-MM>.docx` | `Publicaciones - <Tema> - <AAAA-MM>.docx` |
 | Brand profile | `Brand Profile.docx` | `Perfil de Marca.docx` |
 | What's due | `Due This Week - <YYYY-MM-DD>.xlsx` | `Vencimientos de la Semana - <AAAA-MM-DD>.xlsx` |
+| Park plan | `Park Plan - <Client>.pdf` | `Plan de Parques - <Cliente>.pdf` |
 
 **Travel-trade glossary.** Use the terms agents use, not literal translations:
 | English | Spanish (LatAm) | Notes |
@@ -108,6 +111,8 @@ Agent-facing text defaults to the agent's own form. Use neutral Spanish when you
 | layover | escala | |
 | agency license number | legajo (AR) / número de licencia | Shown in document footers |
 | fam trip | fam trip / viaje de familiarización | |
+| rope drop (be there at opening) | llegar a la apertura (*rope drop*) | |
+| height requirement | altura mínima | |
 
 ## Updating workbooks
 

@@ -1,8 +1,8 @@
 {
   "name": "travel-agent",
   "displayName": "Travel Agent",
-  "version": "0.5.0",
-  "description": "Daily toolkit for freelance travel agents working in Excel, Word and PDF, in English and Spanish: social content, destination research, client questionnaires, trip folders and Trip Sheets, trip summaries and commission tracking. / Kit diario para agentes de viajes freelance en Excel, Word y PDF, en ingl\u00e9s y espa\u00f1ol.",
+  "version": "0.6.0",
+  "description": "Daily toolkit for freelance travel agents working in Excel, Word and PDF, in English and Spanish: social content, destination research, client questionnaires, trip folders and Trip Sheets, trip summaries, commission tracking, and Patty, a Disney World / Universal Orlando park planner. / Kit diario para agentes de viajes freelance en Excel, Word y PDF, en ingl\u00e9s y espa\u00f1ol.",
   "author": {
     "name": "fchambo"
   },
@@ -12,6 +12,9 @@
     "travel-agent",
     "freelance",
     "itinerary",
-    "commissions"
+    "commissions",
+    "disney",
+    "universal",
+    "theme-parks"
   ]
 }
