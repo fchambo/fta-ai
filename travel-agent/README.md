@@ -10,6 +10,7 @@ Agents keep working in **Excel, Word and PDF**. Claude reads their vouchers, con
 | `social-content` | Posts ready to paste, Word drafts, Excel content calendar | "Plan my November Instagram" |
 | `trip-summary` | Client PDF or internal Word summary of dates, payments due and deadlines; "what's due" across all clients | "What's due this week?" |
 | `commissions` | **Providers & Commissions** workbook, rules taken from contracts, Excel commission report | "How much will I earn on the Pérez trip?" |
+| `park-itinerary` (**Patty**) | Disney World and Universal Orlando day-by-day plan built around the group's kids' heights, Lightning Lane/Express, accessibility, fears and must-dos. Client PDF with a route map per day and a fixed-time table | "Patty, 4 days of parks for a family with kids aged 4 and 9 in December" |
 
 ## Commands (English and Spanish)
 
@@ -23,6 +24,7 @@ Type `/` in Claude to pick a skill directly. Each skill also has a Spanish comma
 | `social-content` | `/contenido-redes` | Posts, reels, stories, content calendar |
 | `trip-summary` | `/resumen-de-viaje` | Trip summary, or what's due this week |
 | `commissions` | `/comisiones` | Commissions, providers, commission report |
+| `park-itinerary` | `/itinerario-parques` (or `/patty`) | Disney and Universal park plan with maps |
 
 In Cowork and Claude Code, use the plugin prefix: `/travel-agent:resumen-de-viaje`. You don't need any command: describing the task in English or Spanish also works.
 
@@ -64,4 +66,5 @@ Nothing to install in Claude chat. In Cowork and Claude Code, Python 3 is needed
 - Shared code lives in `tools/` at the repository root. Each skill carries its own copy in `scripts/` and `references/workspace.md`, because in Claude chat a skill only sees its own folder. After editing `tools/`, run `python3 tools/build.py`. CI-style check: `python3 tools/build.py --check`.
 - `tools/travel_agent_tools/schema.py`: every sheet, column and dropdown (EN/ES)
 - `tools/workspace.md`: shared rules every skill reads (folder mode vs chat mode)
+- `tools/travel_agent_tools/parks.py` / `parks_pdf.py`: Patty's planner and PDF. Park data (attractions, schematic map positions, heights, tags, Lightning Lane tiers, typical waits) lives only in `travel-agent/skills/park-itinerary/scripts/parks/*.json`. Re-check it each season: closures, heights and Lightning Lane rules change
 - Don't add a top-level `bin/` folder: Claude chat and Cowork refuse plugins that have one.
