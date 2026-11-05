@@ -7,6 +7,13 @@
   "entrance": [50, 2],
   "landmark": {"name": "Lagoon", "x": 50, "y": 48},
   "data_checked": "2026-11",
+  "osm": {
+    "bbox": [28.4676, -81.4757, 28.4761, -81.4662],
+    "boundary_relation": 1124085,
+    "entrance": [28.4721, -81.4683],
+    "landmark": "Islands of Adventure Lagoon",
+    "names": {"ripsaw": "Dudley Doo-Right's Ripsaw Falls", "hogwarts-express-hm": "Hogsmeade Station"}
+  },
   "lands": [
     {"name": "Port of Entry", "x": 42, "y": 2, "w": 16, "h": 16, "color": "#F3D9A4"},
     {"name": "Marvel Super Hero Island", "x": 62, "y": 8, "w": 34, "h": 32, "color": "#CDD5FD"},

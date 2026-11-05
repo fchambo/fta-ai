@@ -8,6 +8,13 @@
   "entrance": [56, 2],
   "landmark": {"name": "Chinese Theatre", "x": 50, "y": 40},
   "data_checked": "2026-11",
+  "osm": {
+    "bbox": [28.351, -81.565, 28.363, -81.554],
+    "boundary_way": 806728401,
+    "entrance": [28.3578, -81.5588],
+    "landmark": "Mickey and Minnie's Runaway Railway",
+    "names": {"runaway-railway": "Mickey and Minnie's Runaway Railway", "frozen-singalong": "Hyperion Theater", "rnrc": "Rock n Roller Coaster Starring the Muppets", "disney-jr": "Disney Junior Dance Party", "wonderful-world-animation": "Mickey and Minnie's Runaway Railway"}
+  },
   "lands": [
     {"name": "Hollywood Boulevard", "x": 44, "y": 4, "w": 20, "h": 30, "color": "#F3D9A4"},
     {"name": "Echo Lake", "x": 14, "y": 28, "w": 30, "h": 26, "color": "#BFE3A6"},

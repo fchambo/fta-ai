@@ -8,6 +8,12 @@
   "landmark": {"name": "Celestial Park", "x": 50, "y": 40},
   "data_checked": "2026-11",
   "map_note": "Schematic layout: the four worlds open off Celestial Park through portals.",
+  "osm": {
+    "bbox": [28.436, -81.4545, 28.451, -81.441],
+    "boundary_way": 1372221500,
+    "entrance": [28.441561, -81.449506],
+    "landmark": "Celestial Park"
+  },
   "lands": [
     {"name": "Celestial Park", "x": 34, "y": 20, "w": 32, "h": 46, "color": "#F3D9A4"},
     {"name": "SUPER NINTENDO WORLD", "x": 66, "y": 6, "w": 32, "h": 34, "color": "#FBC4B4"},

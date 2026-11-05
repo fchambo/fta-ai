@@ -7,6 +7,15 @@
   "entrance": [62, 2],
   "landmark": {"name": "Lagoon", "x": 50, "y": 50},
   "data_checked": "2026-11",
+  "osm": {
+    "bbox": [28.4718, -81.4745, 28.4826, -81.4639],
+    "boundary_way": 449808332,
+    "entrance": [28.4748, -81.4683],
+    "landmark": "Universal Lagoon",
+    "names": {"transformers": "transformerstm the ride 3d", "horror-makeup": "universals horror make up show", "hogwarts-express-kc": "Kings Cross Station"},
+    "points": {"trollercoaster": [28.47835, -81.46612], "rip-ride": [28.4752, -81.469], "mega-parade": [28.4755, -81.468]},
+    "walk_grid": 8
+  },
   "lands": [
     {"name": "Production Central", "x": 60, "y": 4, "w": 32, "h": 28, "color": "#F3D9A4"},
     {"name": "New York", "x": 74, "y": 34, "w": 24, "h": 32, "color": "#CDD5FD"},

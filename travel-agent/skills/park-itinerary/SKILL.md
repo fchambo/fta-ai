@@ -83,5 +83,5 @@ Finally, offer to add the booking dates to the Trip Sheet's Deadlines (`update-t
 - Never suggest ways around height limits or accessibility rules, such as shoe inserts, misstating a child's age or height, or using an accessibility pass someone isn't eligible for.
 - Disney's DAS is mainly for developmental disabilities (such as autism) and is requested by video chat before the trip. Universal's Attraction Assistance Pass needs the IBCCES card. Explain the process; don't decide eligibility.
 - Mark anything uncertain as *to verify* (an Epic Universe height, a show that may have closed). Universal Express doesn't include Hagrid's, and hotel Express doesn't apply at Epic Universe (verify).
-- The map is schematic, made for this plan. Never copy or embed official park maps or logos.
+- The map shows the park's real layout from OpenStreetMap (© OpenStreetMap contributors, credited on the map) where `scripts/parks/osm/<park>.json` exists, and a schematic map otherwise. Never copy or embed official park maps or logos.
 - Keep the plan doable: with kids under 6, a midday break or an early exit is usually better than a full day. Say so.

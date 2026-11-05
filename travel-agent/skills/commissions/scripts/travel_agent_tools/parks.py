@@ -240,15 +240,97 @@ class Clock:
         return max(5, round5(w))
 
 
+class WalkNet:
+    """Real walkways from OpenStreetMap (scripts/parks/osm/<park>.json), when available.
+
+    The planner keeps working in the park file's 0-100 grid; each grid position is
+    anchored to the walkway node where that attraction (or the entrance) is reached."""
+
+    def __init__(self, park, data):
+        self.data = data
+        nodes = data["graph"]["nodes"]
+        self.nodes = [tuple(p) for p in nodes]
+        self.adj = [[] for _ in nodes]
+        for a, b in data["graph"]["edges"]:
+            w = math.dist(nodes[a], nodes[b])
+            self.adj[a].append((b, w))
+            self.adj[b].append((a, w))
+        self.anchors = {tuple(park["entrance"]): data["entrance"]}
+        for a in park["attractions"]:
+            if a["id"] in data["places"]:
+                self.anchors.setdefault((a["x"], a["y"]), data["places"][a["id"]])
+        mark = park.get("landmark")
+        if mark and data.get("landmark"):
+            self.anchors[(mark["x"], mark["y"])] = self.nearest(data["landmark"])
+        self._tree = {}
+
+    def nearest(self, pt):
+        return min(range(len(self.nodes)), key=lambda i: (self.nodes[i][0] - pt[0]) ** 2 + (self.nodes[i][1] - pt[1]) ** 2)
+
+    def node(self, pos):
+        pos = tuple(pos)
+        if pos in self.anchors:
+            return self.anchors[pos]
+        key = min(self.anchors, key=lambda k: math.dist(k, pos))  # e.g. a land's center: closest known spot
+        return self.anchors[key]
+
+    def _dijkstra(self, src):
+        if src not in self._tree:
+            import heapq
+            dist, prev, heap = {src: 0.0}, {}, [(0.0, src)]
+            while heap:
+                d, v = heapq.heappop(heap)
+                if d > dist.get(v, 1e18):
+                    continue
+                for u, w in self.adj[v]:
+                    if d + w < dist.get(u, 1e18):
+                        dist[u], prev[u] = d + w, v
+                        heapq.heappush(heap, (d + w, u))
+            self._tree[src] = (dist, prev)
+        return self._tree[src]
+
+    def meters(self, a, b):
+        dist, _ = self._dijkstra(self.node(a))
+        return dist.get(self.node(b))
+
+    def path(self, a, b):
+        """Walkway points (meters) from grid position a to b."""
+        src, dst = self.node(a), self.node(b)
+        _, prev = self._dijkstra(src)
+        if dst != src and dst not in prev:
+            return [self.nodes[src], self.nodes[dst]]
+        out = [dst]
+        while out[-1] != src:
+            out.append(prev[out[-1]])
+        return [self.nodes[i] for i in reversed(out)]
+
+
+_NETS = {}
+
+
+def walk_net(park):
+    """The park's OSM walkway network, or None (then the grid estimate is used)."""
+    if park["id"] not in _NETS:
+        path = os.path.join(data_dir(), "osm", f"{park['id']}.json")
+        net = None
+        if os.path.isfile(path):
+            with open(path, encoding="utf-8") as f:
+                net = WalkNet(park, json.load(f))
+        _NETS[park["id"]] = net
+    return _NETS[park["id"]]
+
+
 class Walker:
     def __init__(self, park, slow):
         self.mpu = park.get("meters_per_unit", 9)
         self.speed = 52 if slow else 68  # meters per minute, including crowds
+        self.net = walk_net(park)
 
     def minutes(self, a, b):
         if a is None or b is None:
             return 0
-        d = math.dist(a, b) * self.mpu * 1.3
+        d = self.net.meters(a, b) if self.net else None
+        d = d * 1.05 if d is not None else math.dist(a, b) * self.mpu * 1.3
         return 0 if d < 1 else max(3, round(d / self.speed + 1))
 
 
@@ -342,7 +424,8 @@ def plan_day(park, day, people, prefs, warnings):
             warnings.append({"code": "unknown_place", "what": day["start_at"], "park": park["id"]})
         else:
             start_pos = _pos(spot)
-    express = (day.get("express") or "").lower() if park["operator"] == "universal" else ""
+    express = day.get("express") or ""
+    express = ("unlimited" if express is True else str(express).lower()) if park["operator"] == "universal" else ""
     single_rider_ok = bool(prefs.get("single_rider_ok"))
     split_ok = prefs.get("split_ok", True)
     extras = day.get("extras", prefs.get("extras", True))

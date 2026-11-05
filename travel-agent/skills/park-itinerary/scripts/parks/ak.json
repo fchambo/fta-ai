@@ -8,6 +8,13 @@
   "entrance": [50, 2],
   "landmark": {"name": "Tree of Life", "x": 50, "y": 48},
   "data_checked": "2026-11",
+  "osm": {
+    "bbox": [28.348, -81.601, 28.368, -81.581],
+    "boundary_way": 297441457,
+    "entrance": [28.3556, -81.5894],
+    "landmark": "Tree of Life",
+    "names": {"lion-king": "Festival of the Lion King", "nemo-show": "Theater in the Wild", "dinosaur": "Dino Institute Shop", "zootopia": "Zootopia: Better Zoogether", "feathered-friends": "Royal Anandapur Tea Company"}
+  },
   "lands": [
     {"name": "The Oasis", "x": 42, "y": 4, "w": 16, "h": 16, "color": "#BFE3A6"},
     {"name": "Discovery Island", "x": 36, "y": 34, "w": 28, "h": 28, "color": "#F3D9A4"},
