@@ -281,14 +281,17 @@ def _suggest_lightning(park, day, chosen, clock_, leave, breaks, booked, rope_fi
                   key=lambda c: -(c["weight"] * c["a"].get("peak", 0)))
 
     def free_slot(t):
-        for _ in range(12):
-            t2 = t
-            for b0, b1 in breaks:
-                if b0 - 45 <= t2 < b1:
-                    t2 = b1 + 15
-            if all(abs(t2 - x) >= 45 for x in taken):
-                return t2
-            t += 30
+        """First time from t that avoids breaks, reservations and other suggested slots."""
+        for _ in range(24):
+            moved = False
+            for b0, b1 in sorted(breaks):
+                if b0 - 45 <= t < b1:
+                    t, moved = b1 + 15, True
+            clash = [x for x in taken if abs(t - x) < 45]
+            if clash:
+                t, moved = max(clash) + 45, True
+            if not moved:
+                return t
         return t
 
     if want_multi:
@@ -423,8 +426,12 @@ def plan_day(park, day, people, prefs, warnings):
         pos = _pos(a) if a else None
         if pos is None and at:
             spot = find_attraction(park, at)
+            mark = park.get("landmark") or {}
             land = next((l for l in park["lands"] if norm(at) in norm(l["name"])), None)
-            pos = _pos(spot) if spot else (land["x"] + land["w"] / 2, land["y"] + land["h"] / 2) if land else None
+            if mark and norm(at) and norm(at) in norm(mark.get("name", "")):
+                pos = (mark["x"], mark["y"])
+            else:
+                pos = _pos(spot) if spot else (land["x"] + land["w"] / 2, land["y"] + land["h"] / 2) if land else None
             if pos is None:
                 day_warnings.append({"code": "unknown_place", "what": at})
         if item.get("time") in (None, ""):
@@ -446,7 +453,9 @@ def plan_day(park, day, people, prefs, warnings):
     rope_candidates = sorted((c for c in chosen.values() if c["a"].get("rope") and c["a"]["id"] not in booked),
                              key=lambda c: -(c["weight"] * c["a"].get("peak", 0)))
     rope_first = rope_candidates[0]["a"]["id"] if rope_candidates and arrive <= clock_.open + 15 else None
-    for s in _suggest_lightning(park, day, chosen, clock_, leave, breaks, booked, rope_first):
+    # suggested return times must also avoid dining reservations and shows
+    blocked = breaks + [(x["start"], x.get("end", x["start"] + 30)) for x in appts if x["kind"] not in ("ll", "break")]
+    for s in _suggest_lightning(park, day, chosen, clock_, leave, blocked, booked, rope_first):
         booked.add(s["a"]["id"])
         appts.append({"kind": "ll", "lane": s["kind"], "a": s["a"], "start": s["time"], "window": 60,
                       "pos": _pos(s["a"]), "suggested": True})
