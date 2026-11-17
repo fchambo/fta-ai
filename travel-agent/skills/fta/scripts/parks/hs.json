@@ -1,0 +1,50 @@
+{
+  "id": "hs",
+  "name": "Disney's Hollywood Studios",
+  "resort": "Walt Disney World",
+  "operator": "disney",
+  "ll_tiers": true,
+  "meters_per_unit": 9,
+  "entrance": [56, 2],
+  "landmark": {"name": "Chinese Theatre", "x": 50, "y": 40},
+  "data_checked": "2026-11",
+  "osm": {
+    "bbox": [28.351, -81.565, 28.363, -81.554],
+    "boundary_way": 806728401,
+    "entrance": [28.3578, -81.5588],
+    "landmark": "Mickey and Minnie's Runaway Railway",
+    "names": {"runaway-railway": "Mickey and Minnie's Runaway Railway", "frozen-singalong": "Hyperion Theater", "rnrc": "Rock n Roller Coaster Starring the Muppets", "disney-jr": "Disney Junior Dance Party", "wonderful-world-animation": "Mickey and Minnie's Runaway Railway"}
+  },
+  "lands": [
+    {"name": "Hollywood Boulevard", "x": 44, "y": 4, "w": 20, "h": 30, "color": "#F3D9A4"},
+    {"name": "Echo Lake", "x": 14, "y": 28, "w": 30, "h": 26, "color": "#BFE3A6"},
+    {"name": "Sunset Boulevard", "x": 64, "y": 20, "w": 34, "h": 30, "color": "#E9C79C"},
+    {"name": "Star Wars: Galaxy's Edge", "x": 2, "y": 58, "w": 42, "h": 39, "color": "#D6CFC4"},
+    {"name": "Toy Story Land", "x": 46, "y": 62, "w": 32, "h": 32, "color": "#F6C9E0"},
+    {"name": "Animation Courtyard", "x": 62, "y": 50, "w": 20, "h": 12, "color": "#CDD5FD"}
+  ],
+  "water": [{"x": 30, "y": 40, "rx": 6, "ry": 4}],
+  "attractions": [
+    {"id": "runaway-railway", "name": "Mickey & Minnie's Runaway Railway", "short": "Runaway Railway", "land": "Hollywood Boulevard", "x": 50, "y": 42, "type": "ride", "min": 8, "thrill": 1, "tags": ["dark", "spin"], "lane": "t1", "peak": 45, "access": "wheelchair"},
+    {"id": "star-tours", "name": "Star Tours – The Adventures Continue", "short": "Star Tours", "land": "Echo Lake", "x": 25, "y": 47, "type": "ride", "min": 7, "height_in": 40, "thrill": 2, "tags": ["sim", "3d"], "lane": "t2", "peak": 25, "access": "transfer"},
+    {"id": "indiana-jones", "name": "Indiana Jones Epic Stunt Spectacular!", "short": "Indiana Jones Stunt Show", "land": "Echo Lake", "x": 17, "y": 38, "type": "show", "min": 30, "thrill": 0, "tags": ["loud", "fire"], "lane": "t2", "peak": 15, "access": "wheelchair", "status": "verify", "status_note": "Check it's still running and the show times for your date."},
+    {"id": "frozen-singalong", "name": "For the First Time in Forever: A Frozen Sing-Along", "short": "Frozen Sing-Along", "land": "Echo Lake", "x": 33, "y": 32, "type": "show", "min": 30, "thrill": 0, "tags": [], "lane": "t2", "peak": 15, "access": "wheelchair"},
+    {"id": "rnrc", "name": "Rock 'n' Roller Coaster", "land": "Sunset Boulevard", "x": 86, "y": 28, "type": "ride", "min": 2, "height_in": 48, "thrill": 3, "tags": ["coaster", "launch", "dark", "loud"], "lane": "t1", "peak": 60, "rope": true, "access": "transfer", "status": "verify", "status_note": "Re-theming to The Muppets was announced for 2026: confirm name, status and height."},
+    {"id": "tower-terror", "name": "The Twilight Zone Tower of Terror", "short": "Tower of Terror", "land": "Sunset Boulevard", "x": 91, "y": 41, "type": "ride", "min": 5, "height_in": 40, "thrill": 3, "tags": ["drops", "dark", "heights", "scary"], "lane": "t1", "peak": 60, "rope": true, "access": "transfer"},
+    {"id": "beauty-beast", "name": "Beauty and the Beast – Live on Stage", "short": "Beauty and the Beast", "land": "Sunset Boulevard", "x": 72, "y": 35, "type": "show", "min": 25, "thrill": 0, "tags": [], "lane": "t2", "peak": 15, "access": "wheelchair"},
+    {"id": "fantasmic", "name": "Fantasmic!", "land": "Sunset Boulevard", "x": 94, "y": 52, "type": "fireworks", "min": 30, "thrill": 0, "tags": ["loud", "fire"], "lane": null, "peak": 40, "access": "wheelchair", "status_note": "Arrive 30–45 min early. Some dining packages include reserved seating."},
+    {"id": "rise", "name": "Star Wars: Rise of the Resistance", "short": "Rise of the Resistance", "land": "Star Wars: Galaxy's Edge", "x": 14, "y": 86, "type": "ride", "min": 18, "height_in": 40, "thrill": 2, "tags": ["dark", "drops", "scary", "loud", "sim", "enclosed"], "lane": "single", "peak": 85, "rope": true, "access": "transfer", "status_note": "Long indoor pre-shows with small rooms; it breaks down often, so keep a backup plan."},
+    {"id": "falcon", "name": "Millennium Falcon: Smugglers Run", "short": "Smugglers Run", "land": "Star Wars: Galaxy's Edge", "x": 30, "y": 73, "type": "ride", "min": 5, "height_in": 38, "thrill": 2, "tags": ["sim", "interactive"], "lane": "t1", "peak": 45, "single_rider": true, "access": "transfer"},
+    {"id": "slinky", "name": "Slinky Dog Dash", "land": "Toy Story Land", "x": 66, "y": 84, "type": "ride", "min": 2, "height_in": 38, "thrill": 2, "tags": ["coaster", "launch"], "lane": "t1", "peak": 75, "rope": true, "access": "transfer"},
+    {"id": "tsm", "name": "Toy Story Mania!", "short": "Toy Story Mania", "land": "Toy Story Land", "x": 53, "y": 70, "type": "ride", "min": 7, "thrill": 0, "tags": ["3d", "interactive", "spin"], "lane": "t2", "peak": 40, "access": "wheelchair"},
+    {"id": "alien-saucers", "name": "Alien Swirling Saucers", "land": "Toy Story Land", "x": 72, "y": 72, "type": "ride", "min": 2, "height_in": 32, "thrill": 1, "tags": ["spin"], "lane": "t2", "peak": 30, "access": "transfer"},
+    {"id": "disney-jr", "name": "Disney Jr. Play and Dance!", "short": "Disney Jr. Play and Dance", "land": "Animation Courtyard", "x": 70, "y": 56, "type": "show", "min": 22, "thrill": 0, "tags": ["loud", "interactive"], "lane": "t2", "peak": 10, "access": "wheelchair"},
+    {"id": "wonderful-world-animation", "name": "Wonderful World of Animation (projections)", "short": "Wonderful World of Animation", "land": "Hollywood Boulevard", "x": 52, "y": 34, "type": "fireworks", "min": 15, "thrill": 0, "tags": ["loud"], "lane": null, "peak": 20, "access": "wheelchair"}
+  ],
+  "tips": [
+    "At rope drop the crowd splits between Slinky Dog Dash and Rise of the Resistance: pick one and do the other with a Single Pass or late in the evening.",
+    "Lightning Lane Multi Pass is tiered here: 1 from Tier 1 and 2 from Tier 2.",
+    "Few rides for toddlers: a good half day for families with babies, or a full day for Star Wars and Toy Story fans.",
+    "Muppet*Vision 3D closed in 2025 and the Grand Avenue area is under construction for a Monsters, Inc. land."
+  ]
+}

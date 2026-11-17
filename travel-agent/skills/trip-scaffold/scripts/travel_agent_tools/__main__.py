@@ -270,7 +270,51 @@ def cmd_park_pdf(args):
     if args.lang:
         plan["lang"] = args.lang
     workbooks.ensure_closed(args.output)
-    out({"pdf": parks_pdf.render(plan, args.output, footer=args.footer, color=args.color)})
+    out({"pdf": parks_pdf.render(plan, args.output, footer=args.footer, color=args.color, palette=args.palette)})
+
+
+def cmd_client(args):
+    from . import clients
+    base_dir, cfg = find_config(args.base)
+    root = base_dir or os.path.abspath(args.base)
+    lang = lang_of(cfg.get("lang"))
+    matches = clients.find(root, args.name, _trip_sheets(root))
+    best = [m for m in matches if m["score"] == matches[0]["score"]] if matches else []
+    if len(best) == 1 and best[0]["score"] >= 2:
+        out({"status": "found", **clients.load(best[0], lang)})
+    elif args.create and not (best and best[0]["score"] >= 2):
+        if base_dir is None:
+            sys.exit("No travel-agent workspace here. Run 'init' first.")
+        out({"status": "created", **clients.create(os.path.join(root, folder("clients", lang)), args.name, lang, safe_name)})
+    else:
+        out({"status": "ambiguous" if best else "not_found",
+             "candidates": [{"client": m["client"], "client_dir": m["client_dir"], "names": m["names"],
+                             "trips": len(m["trip_paths"]), "score": m["score"]} for m in matches[:8]],
+             "hint": "Confirm with the agent, then re-run with the exact folder name"
+                     + ("" if best and best[0]["score"] >= 2 else ", or with --create for a new client")})
+
+
+def _providers_for_quote(path):
+    if not path:
+        return None
+    return workbooks.read(path, schema.PROVIDERS_WORKBOOK)
+
+
+def cmd_quote(args):
+    from . import quote
+    result = quote.compute(load_json_arg(args.quote), providers=_providers_for_quote(args.providers), today=today_arg(args))
+    if args.out:
+        with open(args.out, "w", encoding="utf-8") as f:
+            json.dump(result, f, ensure_ascii=False, indent=2)
+    out(result)
+
+
+def cmd_quote_pdf(args):
+    from . import quote
+    plan = load_json_arg(args.plan) if args.plan else None
+    workbooks.ensure_closed(args.output)
+    out({"pdf": quote.render(load_json_arg(args.quote), args.output, plan=plan, footer=args.footer,
+                             palette=args.palette, color=args.color, lang=args.lang)})
 
 
 def main():
@@ -324,8 +368,22 @@ def main():
     s.set_defaults(fn=cmd_park_plan)
     s = sub.add_parser("park-pdf", help="Plan JSON -> client PDF with maps and schedules")
     s.add_argument("plan"); s.add_argument("output"); s.add_argument("--footer"); s.add_argument("--lang", choices=schema.LANGS)
-    s.add_argument("--color", default="0F766E")
+    s.add_argument("--palette", help="Agency brand colors, main first: '#0F766E,#EA580C,#4150F7'")
+    s.add_argument("--color", help="Main color only (use --palette for the full brand palette)")
     s.set_defaults(fn=cmd_park_pdf)
+    s = sub.add_parser("client", help="Find a client (accent/case-insensitive): profile + past trips. --create for a new one")
+    s.add_argument("base"); s.add_argument("name"); s.add_argument("--create", action="store_true")
+    s.set_defaults(fn=cmd_client)
+    s = sub.add_parser("quote", help="Price a quote JSON: totals, per person, payments, commission estimate (internal)")
+    s.add_argument("quote", help="JSON string or path to a .json file")
+    s.add_argument("--providers", help="Providers & Commissions workbook, for the commission estimate")
+    s.add_argument("--out", help="Also save the priced quote here"); s.add_argument("--today")
+    s.set_defaults(fn=cmd_quote)
+    s = sub.add_parser("quote-pdf", help="Quote JSON -> client PDF (itinerary, prices, payments), plus the park plan with --plan")
+    s.add_argument("quote"); s.add_argument("output"); s.add_argument("--plan", help="Patty's plan JSON to append")
+    s.add_argument("--footer"); s.add_argument("--lang", choices=schema.LANGS)
+    s.add_argument("--palette", help="Agency brand colors, main first"); s.add_argument("--color")
+    s.set_defaults(fn=cmd_quote_pdf)
 
     args = p.parse_args()
     try:

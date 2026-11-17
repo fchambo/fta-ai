@@ -1,0 +1,52 @@
+{
+  "id": "epcot",
+  "name": "EPCOT",
+  "resort": "Walt Disney World",
+  "operator": "disney",
+  "ll_tiers": true,
+  "meters_per_unit": 13,
+  "entrance": [50, 2],
+  "landmark": {"name": "Spaceship Earth", "x": 50, "y": 15},
+  "data_checked": "2026-11",
+  "osm": {
+    "bbox": [28.364, -81.557, 28.378, -81.542],
+    "boundary_way": 805298160,
+    "entrance": [28.3762, -81.5494],
+    "landmark": "Spaceship Earth",
+    "names": {"mission-space-orange": "Mission: SPACE", "mission-space-green": "Mission: SPACE", "gran-fiesta": "Gran Fiesta Tour Starring the Three Caballeros", "remy": "Remy's Ratatouille Adventure", "luminous": "Luminous The Symphony of Us"}
+  },
+  "lands": [
+    {"name": "World Celebration", "x": 36, "y": 4, "w": 28, "h": 26, "color": "#F3D9A4"},
+    {"name": "World Discovery", "x": 64, "y": 8, "w": 32, "h": 32, "color": "#CDD5FD"},
+    {"name": "World Nature", "x": 4, "y": 8, "w": 32, "h": 32, "color": "#BFE3A6"},
+    {"name": "World Showcase", "x": 8, "y": 42, "w": 84, "h": 55, "color": "#F6C9E0"}
+  ],
+  "water": [{"x": 50, "y": 66, "rx": 28, "ry": 19}],
+  "attractions": [
+    {"id": "spaceship-earth", "name": "Spaceship Earth", "land": "World Celebration", "x": 50, "y": 18, "type": "ride", "min": 16, "thrill": 0, "tags": ["dark"], "lane": "t2", "peak": 30, "access": "ambulatory"},
+    {"id": "guardians", "name": "Guardians of the Galaxy: Cosmic Rewind", "short": "Cosmic Rewind", "land": "World Discovery", "x": 70, "y": 18, "type": "ride", "min": 4, "height_in": 42, "thrill": 3, "tags": ["coaster", "launch", "spin", "dark", "backwards"], "lane": "single", "peak": 80, "rope": true, "access": "transfer", "status_note": "Check whether it uses a virtual queue on your date."},
+    {"id": "test-track", "name": "Test Track", "land": "World Discovery", "x": 86, "y": 26, "type": "ride", "min": 6, "height_in": 40, "thrill": 2, "tags": ["loud"], "lane": "t1", "peak": 60, "rope": true, "single_rider": true, "access": "transfer"},
+    {"id": "mission-space-orange", "name": "Mission: SPACE (Orange, intense)", "short": "Mission: SPACE Orange", "land": "World Discovery", "x": 75, "y": 34, "type": "ride", "min": 6, "height_in": 44, "thrill": 3, "tags": ["sim", "spin", "enclosed"], "lane": "t2", "peak": 25, "access": "transfer"},
+    {"id": "mission-space-green", "name": "Mission: SPACE (Green, no spinning)", "short": "Mission: SPACE Green", "land": "World Discovery", "x": 79, "y": 36, "type": "ride", "min": 6, "height_in": 40, "thrill": 1, "tags": ["sim", "enclosed"], "lane": "t2", "peak": 15, "access": "transfer"},
+    {"id": "soarin", "name": "Soarin' Around the World", "short": "Soarin'", "land": "World Nature", "x": 20, "y": 28, "type": "ride", "min": 9, "height_in": 40, "thrill": 1, "tags": ["heights", "sim"], "lane": "t1", "peak": 50, "rope": true, "access": "transfer"},
+    {"id": "living-land", "name": "Living with the Land", "land": "World Nature", "x": 26, "y": 33, "type": "ride", "min": 14, "thrill": 0, "tags": ["boat"], "lane": "t2", "peak": 20, "access": "wheelchair"},
+    {"id": "journey-water", "name": "Journey of Water, Inspired by Moana", "short": "Journey of Water", "land": "World Nature", "x": 31, "y": 21, "type": "walk", "min": 15, "thrill": 0, "tags": ["wet", "interactive"], "lane": null, "peak": 10, "access": "wheelchair"},
+    {"id": "nemo-seas", "name": "The Seas with Nemo & Friends", "short": "Seas with Nemo", "land": "World Nature", "x": 12, "y": 17, "type": "ride", "min": 5, "thrill": 0, "tags": ["dark"], "lane": "t2", "peak": 15, "access": "transfer"},
+    {"id": "turtle-talk", "name": "Turtle Talk With Crush", "short": "Turtle Talk", "land": "World Nature", "x": 15, "y": 22, "type": "show", "min": 15, "thrill": 0, "tags": ["interactive"], "lane": "t2", "peak": 15, "access": "wheelchair"},
+    {"id": "figment", "name": "Journey Into Imagination With Figment", "short": "Figment", "land": "World Nature", "x": 33, "y": 31, "type": "ride", "min": 7, "thrill": 0, "tags": ["dark", "loud"], "lane": "t2", "peak": 10, "access": "transfer"},
+    {"id": "gran-fiesta", "name": "Gran Fiesta Tour Starring The Three Caballeros (Mexico)", "short": "Gran Fiesta Tour", "land": "World Showcase", "x": 18, "y": 49, "type": "ride", "min": 8, "thrill": 0, "tags": ["dark", "boat"], "lane": "t2", "peak": 15, "access": "transfer"},
+    {"id": "frozen", "name": "Frozen Ever After (Norway)", "short": "Frozen Ever After", "land": "World Showcase", "x": 15, "y": 60, "type": "ride", "min": 6, "thrill": 1, "tags": ["dark", "boat", "drops", "backwards"], "lane": "t1", "peak": 70, "rope": true, "access": "transfer"},
+    {"id": "reflections-china", "name": "Reflections of China (360° film)", "short": "Reflections of China", "land": "World Showcase", "x": 17, "y": 71, "type": "show", "min": 14, "thrill": 0, "tags": ["standing"], "lane": null, "peak": 5, "access": "wheelchair"},
+    {"id": "american-adventure", "name": "The American Adventure", "land": "World Showcase", "x": 50, "y": 91, "type": "show", "min": 30, "thrill": 0, "tags": [], "lane": null, "peak": 5, "access": "wheelchair"},
+    {"id": "remy", "name": "Remy's Ratatouille Adventure (France)", "short": "Remy's Ratatouille", "land": "World Showcase", "x": 81, "y": 71, "type": "ride", "min": 5, "thrill": 0, "tags": ["3d", "dark"], "lane": "t1", "peak": 60, "rope": true, "access": "wheelchair"},
+    {"id": "impressions-france", "name": "Impressions de France / Beauty and the Beast Sing-Along", "short": "Impressions de France", "land": "World Showcase", "x": 84, "y": 76, "type": "show", "min": 15, "thrill": 0, "tags": [], "lane": null, "peak": 5, "access": "wheelchair"},
+    {"id": "canada", "name": "Canada Far and Wide (360° film)", "short": "Canada Far and Wide", "land": "World Showcase", "x": 83, "y": 52, "type": "show", "min": 15, "thrill": 0, "tags": ["standing"], "lane": null, "peak": 5, "access": "wheelchair"},
+    {"id": "luminous", "name": "Luminous: The Symphony of Us (fireworks)", "short": "Luminous", "land": "World Showcase", "x": 50, "y": 44, "type": "fireworks", "min": 20, "thrill": 0, "tags": ["loud"], "lane": null, "peak": 30, "access": "wheelchair", "status_note": "Watch from the World Showcase Plaza facing the lagoon, close to the exit."}
+  ],
+  "tips": [
+    "Frozen Ever After and Remy are both in World Showcase: rope drop one through the International Gateway (Boardwalk resorts) or right after World Showcase opens.",
+    "Lightning Lane Multi Pass is tiered here: 1 from Tier 1 (Frozen, Remy, Test Track, Soarin') and 2 from Tier 2.",
+    "Festivals (Flower & Garden in spring, Food & Wine in fall, Festival of the Holidays in Nov–Dec) bring local crowds on weekends.",
+    "The park is big: walking the World Showcase loop is about 2 km. Plan breaks for kids and older travelers."
+  ]
+}

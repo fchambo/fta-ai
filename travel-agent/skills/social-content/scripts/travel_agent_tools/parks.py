@@ -16,6 +16,7 @@ from datetime import date, timedelta
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA_CANDIDATES = [
     os.path.join(os.path.dirname(HERE), "parks"),  # <skill>/scripts/parks
+    os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(HERE))), "park-itinerary", "scripts", "parks"),  # sibling skill
     os.path.join(os.path.dirname(os.path.dirname(HERE)), "travel-agent", "skills", "park-itinerary", "scripts", "parks"),
 ]
 

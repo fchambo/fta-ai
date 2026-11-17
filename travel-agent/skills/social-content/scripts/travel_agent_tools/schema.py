@@ -122,6 +122,7 @@ TRIP_WORKBOOK = {
 
 SETTINGS = [
     ("agency_name", "Agency / brand name", "Nombre de agencia / marca", "text"),
+    ("brand_colors", "Brand colors (hex: main, second, accent)", "Colores de marca (hex: principal, secundario, acento)", "text"),
     ("language", "Language", "Idioma", "choice:lang"),
     ("home_currency", "Home currency", "Moneda principal", "text"),
     ("tax_on_commission_pct", "VAT on commissions %", "IVA sobre comisiones %", "number"),
