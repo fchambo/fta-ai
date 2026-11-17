@@ -107,7 +107,12 @@ def cmd_init(args):
             ws.cell(row=r, column=2, value=v)
         wb.save(providers)
         created = True
+    tasks = os.path.join(base, schema.FILE_NAMES["tasks"][schema.LANGS.index(lang)])
+    tasks_created = not os.path.exists(tasks)
+    if tasks_created:
+        workbooks.create(tasks, schema.TASKS_WORKBOOK, {}, lang)
     out({"base": base, "lang": lang, "providers_workbook": providers, "providers_created": created,
+         "tasks_workbook": tasks, "tasks_created": tasks_created,
          "folders": [folder(k, lang) for k in schema.ROOT_FOLDERS]})
 
 
@@ -317,6 +322,27 @@ def cmd_quote_pdf(args):
                              palette=args.palette, color=args.color, lang=args.lang)})
 
 
+def cmd_dashboard(args):
+    from . import dashboard
+    paths = args.paths or ["."]
+    data = dashboard.collect(paths, today=today_arg(args), lang=args.lang)
+    base_dir = next((b for b in (find_config(p)[0] for p in paths) if b), None)
+    output = args.out
+    if not output:
+        root = base_dir or (paths[0] if os.path.isdir(paths[0]) else os.path.dirname(os.path.abspath(paths[0])))
+        output = os.path.join(root, schema.FILE_NAMES["dashboard"][schema.LANGS.index(data["lang"])])
+    dashboard.render(data, output)
+    tasks = data["sources"]["tasks"]
+    hint = None
+    if not tasks:
+        hint = ("No My Tasks workbook found: run 'ta init <base>' to create it" if base_dir
+                else "No My Tasks workbook among the files: the agent's own tasks are missing")
+    out({"html": os.path.abspath(output), "lang": data["lang"], "today": data["today"],
+         **dashboard.summary(data), "trip_sheets": len(data["sources"]["trips"]),
+         "tasks_workbook": tasks[0] if tasks else None, "providers_workbook": (data["sources"]["providers"] or [None])[0],
+         "warnings": data["warnings"] + ([hint] if hint else [])})
+
+
 def main():
     p = argparse.ArgumentParser(prog="ta")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -333,7 +359,8 @@ def main():
     s = sub.add_parser("find-trips"); s.add_argument("base"); s.add_argument("--active", action="store_true")
     s.set_defaults(fn=cmd_find_trips)
 
-    for name, layout in (("trip", schema.TRIP_WORKBOOK), ("providers", schema.PROVIDERS_WORKBOOK)):
+    for name, layout in (("trip", schema.TRIP_WORKBOOK), ("providers", schema.PROVIDERS_WORKBOOK),
+                         ("tasks", schema.TASKS_WORKBOOK)):
         s = sub.add_parser(f"read-{name}"); s.add_argument("file"); s.set_defaults(fn=cmd_read(layout))
         s = sub.add_parser(f"update-{name}", help="Merge JSON changes ({section: {...} or [...]}) into the workbook")
         s.add_argument("file"); s.add_argument("changes", help="JSON string or path to a .json file")
@@ -384,6 +411,12 @@ def main():
     s.add_argument("--footer"); s.add_argument("--lang", choices=schema.LANGS)
     s.add_argument("--palette", help="Agency brand colors, main first"); s.add_argument("--color")
     s.set_defaults(fn=cmd_quote_pdf)
+
+    s = sub.add_parser("dashboard", help="Interactive HTML dashboard: next dates and pending tasks for every client and the agent")
+    s.add_argument("paths", nargs="*", help="Agency folder, or Trip Sheets / My Tasks / Providers workbooks")
+    s.add_argument("--out", help="HTML file to write (default: Dashboard.html in the agency folder)")
+    s.add_argument("--lang", choices=schema.LANGS); s.add_argument("--today")
+    s.set_defaults(fn=cmd_dashboard)
 
     args = p.parse_args()
     try:

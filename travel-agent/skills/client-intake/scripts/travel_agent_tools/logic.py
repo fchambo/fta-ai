@@ -53,7 +53,8 @@ def timeline(trip, today):
         payer = schema.choice_label("payer", p.get("payer") or "client", lang)
         who = f"{payer} → {p.get('payee')}" if p.get("payee") else payer
         add(p.get("due_date"), "payment", f"{p.get('description') or i18n.t(lang, 'payment')} ({who})",
-            done=paid, amount=amount, currency=cur, payer=p.get("payer") or "client", booking=p.get("booking"))
+            done=paid, amount=amount, currency=cur, payer=p.get("payer") or "client", booking=p.get("booking"),
+            description=p.get("description"), payee=p.get("payee"))
 
     for d in trip.get("deadlines") or []:
         add(d.get("date"), "deadline", d.get("what") or i18n.t(lang, "deadline"), done=d.get("done") == "yes")

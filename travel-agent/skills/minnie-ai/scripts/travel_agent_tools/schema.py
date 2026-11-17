@@ -41,6 +41,7 @@ CHOICES = {
                   ("night", "Per night", "Por noche")],
     "period": [("year", "Year", "Año"), ("quarter", "Quarter", "Trimestre")],
     "lang": [("en", "English", "Inglés"), ("es", "Spanish", "Español")],
+    "priority": [("high", "High", "Alta"), ("normal", "Normal", "Normal"), ("low", "Low", "Baja")],
 }
 
 # --- Trip Sheet workbook -----------------------------------------------------
@@ -175,6 +176,21 @@ PROVIDERS_WORKBOOK = {
     "incentives": ("Incentives", "Incentivos", INCENTIVES, "table"),
 }
 
+# --- My Tasks workbook (the agent's own to-dos, with or without a client) -------
+
+TASKS = [
+    ("task", "Task", "Tarea", "text"),
+    ("due", "Due", "Vence", "date"),
+    ("client", "Client (optional)", "Cliente (opcional)", "text"),
+    ("priority", "Priority", "Prioridad", "choice:priority"),
+    ("done", "Done", "Hecho", "choice:yesno"),
+    ("notes", "Notes", "Notas", "text"),
+]
+
+TASKS_WORKBOOK = {
+    "tasks": ("My Tasks", "Mis Tareas", TASKS, "table"),
+}
+
 # --- Folder names -------------------------------------------------------------
 
 ROOT_FOLDERS = {
@@ -198,6 +214,8 @@ TRIP_FOLDERS = [
 FILE_NAMES = {
     "trip_sheet": ("Trip Sheet", "Ficha del Viaje"),
     "providers": ("Providers & Commissions.xlsx", "Proveedores y Comisiones.xlsx"),
+    "tasks": ("My Tasks.xlsx", "Mis Tareas.xlsx"),
+    "dashboard": ("Dashboard.html", "Tablero.html"),
 }
 
 
