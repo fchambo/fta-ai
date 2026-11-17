@@ -11,8 +11,8 @@ All file work goes through one Python script, `ta.py`, in this skill's `scripts/
 | `ta init <base> --lang es --agency "Name" --currency USD` | Create the workspace folders and the Providers & Commissions workbook |
 | `ta new-trip <base> "<Client>" "<Destination>" <YYYY-MM>` | Create the trip folders and Trip Sheet. Exits with code 2 if the trip already exists |
 | `ta find-trips <base> [--active]` | List all Trip Sheets (status, dates) |
-| `ta read-trip <file.xlsx>` / `read-providers <file.xlsx>` | Workbook → JSON (for you to read) |
-| `ta update-trip <file.xlsx> '<json>'` / `update-providers …` | Merge changes into the workbook (see below) |
+| `ta read-trip <file.xlsx>` / `read-providers …` / `read-tasks …` | Workbook → JSON (for you to read) |
+| `ta update-trip <file.xlsx> '<json>'` / `update-providers …` / `update-tasks …` | Merge changes into the workbook (see below) |
 | `ta timeline <file.xlsx>…` or `--base <dir> --active` | Dated events, payment totals and data checks |
 | `ta commissions <providers.xlsx> [trip.xlsx…] [--report out.xlsx]` | Commission calculation (all trips if none are given) |
 | `ta docx <draft.md> <out.docx> [--pdf] [--footer "…"] [--title "…"]` | Your markdown → styled Word document (and PDF) |
@@ -23,6 +23,7 @@ All file work goes through one Python script, `ta.py`, in this skill's `scripts/
 | `ta client <base> "<name>" [--create]` | Find a client (ignores accents and case): their profile and a summary of every past trip. `--create` makes the client folder and profile |
 | `ta quote <quote.json> [--providers <xlsx>]` | Price a quote: totals, per person, payment schedule, **internal** commission estimate, warnings, and rows ready for `update-trip` |
 | `ta quote-pdf <quote.json> <out.pdf> [--plan plan.json] [--palette …]` | Client quote PDF: itinerary, prices, payments, conditions, plus Patty's park plan with `--plan` |
+| `ta dashboard <agency folder or .xlsx files…> [--out file.html]` | The agent's **internal** interactive dashboard (one HTML file): next dates and pending tasks per client and for the agent, plus what needs attention as JSON (dashboard skill) |
 
 Read **PDFs** (vouchers, confirmations, rate sheets, passports) and images (screenshots of WhatsApp chats or tickets) with your own file-reading ability.
 
@@ -53,7 +54,7 @@ Read **PDFs** (vouchers, confirmations, rate sheets, passports) and images (scre
 
 ## Workspace layout
 
-`init` creates the folders below (names follow the workspace language, English or Spanish). It writes the language to a hidden `.travel-agent.json`, and `ta` finds that file automatically from any path inside the workspace. A workbook's own sheet names tell `ta` its language, so a single uploaded file works without the workspace.
+`init` creates the folders and workbooks below (names follow the workspace language, English or Spanish). It writes the language to a hidden `.travel-agent.json`, and `ta` finds that file automatically from any path inside the workspace. A workbook's own sheet names tell `ta` its language, so a single uploaded file works without the workspace.
 
 ```
 <agency folder>/
@@ -63,6 +64,8 @@ Read **PDFs** (vouchers, confirmations, rate sheets, passports) and images (scre
 │       ├── Trip Sheet - <Client> - <Destination>.xlsx   ← the trip's source of truth
 │       ├── 1 - Intake … 8 - Photos & Reviews
 ├── Commissions|Comisiones/Providers & Commissions.xlsx
+├── My Tasks.xlsx | Mis Tareas.xlsx                    ← the agent's own to-dos (dashboard skill)
+├── Dashboard.html | Tablero.html                      ← built by `ta dashboard`, open in a browser
 ├── Marketing/
 └── Destinations|Destinos/
 ```
@@ -108,6 +111,8 @@ Agent-facing text defaults to the agent's own form. Use neutral Spanish when you
 | Park plan | `Park Plan - <Client>.pdf` | `Plan de Parques - <Cliente>.pdf` |
 | Quote | `Quote - <Client> - v<N>.pdf` | `Cotización - <Cliente> - v<N>.pdf` |
 | Client profile | `Client Profile.md` (in the client folder) | `Perfil del Cliente.md` |
+| Agent's tasks | `My Tasks.xlsx` (agency folder) | `Mis Tareas.xlsx` |
+| Dashboard | `Dashboard.html` (agency folder) | `Tablero.html` |
 
 **Travel-trade glossary.** Use the terms agents use, not literal translations:
 | English | Spanish (LatAm) | Notes |

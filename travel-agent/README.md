@@ -11,6 +11,7 @@ Agents keep working in **Excel, Word and PDF**. Claude reads their vouchers, con
 | `client-intake` | Questionnaire tailored to the destination and trip type (Word/PDF or WhatsApp text). Client answers are loaded into the Trip Sheet | "What should I ask a family going to Japan in April?" |
 | `destination-research` | Sourced destination guide in Word, plus an optional client-ready PDF | "Research Albania for Argentine couples in September" |
 | `social-content` | Posts ready to paste, Word drafts, Excel content calendar | "Plan my November Instagram" |
+| `dashboard` | Interactive **dashboard** that opens in the browser: next important dates and pending tasks for every client (payments due, free-cancellation deadlines, departures, data to fix) and for you (your **My Tasks** list, provider payments, commissions to collect). Filter by client, by who has to act, by date | "Show me my dashboard" · "Remind me to call the Pérez family on Friday" |
 | `trip-summary` | Client PDF or internal Word summary of dates, payments due and deadlines; "what's due" across all clients | "What's due this week?" |
 | `commissions` | **Providers & Commissions** workbook, rules taken from contracts, Excel commission report | "How much will I earn on the Pérez trip?" |
 | `park-itinerary` (**Patty**) | Disney World and Universal Orlando day-by-day plan built around the group's kids' heights, Lightning Lane/Express, accessibility, fears and must-dos. Client PDF with a route map per day and a fixed-time table | "Patty, 4 days of parks for a family with kids aged 4 and 9 in December" |
@@ -26,6 +27,7 @@ Type `/` in Claude to pick a skill directly. Each skill also has a Spanish comma
 | `destination-research` | `/investigar-destino` | Destination guide, comparisons, trending destinations |
 | `social-content` | `/contenido-redes` | Posts, reels, stories, content calendar |
 | `trip-summary` | `/resumen-de-viaje` | Trip summary, or what's due this week |
+| `dashboard` | `/tablero` | Dashboard of dates and pending tasks, add or close your tasks |
 | `commissions` | `/comisiones` | Commissions, providers, commission report |
 | `park-itinerary` | `/itinerario-parques` (or `/patty`) | Disney and Universal park plan with maps |
 | `fta` | `/cotizar` (or `/fta`) | New request → client memory → specialists → quote PDF |

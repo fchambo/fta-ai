@@ -36,6 +36,7 @@ The dates are computed by `ta timeline`, so overdue and upcoming items are alway
 2. Merge every `overdue` and `due_soon` event into one table: client, date, item, amount and status. Put overdue client payments and expiring free-cancellation deadlines first.
 3. Show it in chat. If the agent wants to keep it, also save it as an Excel file with `ta xlsx` (e.g. `Due this week - <date>.xlsx` in the agency root).
 4. Offer to draft payment-reminder messages to clients with overdue balances, in their language and ready for WhatsApp.
+5. If the agent wants to see everything at a glance, or asks often, offer the **dashboard** skill: an interactive page with every client's dates and their own tasks.
 
 ## Data checks
 

@@ -10,7 +10,7 @@
     {
       "name": "travel-agent",
       "source": "./travel-agent",
-      "description": "Daily toolkit for freelance travel agents: FTA agent from request to priced quote (MinnieAI for Disney, FionaAI for Universal, Patty park plans), social content, destination research, client intake, trip folders, trip summaries and commission tracking."
+      "description": "Daily toolkit for freelance travel agents: FTA agent from request to priced quote (MinnieAI for Disney, FionaAI for Universal, Patty park plans), social content, destination research, client intake, trip folders, trip summaries, an interactive dashboard of dates and pending tasks, and commission tracking."
     }
   ]
 }
