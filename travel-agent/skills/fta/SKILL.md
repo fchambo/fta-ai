@@ -35,6 +35,8 @@ Then create the trip with `ta new-trip "<agency folder>" "<Client>" "<Destinatio
 
 **Chat mode:** ask the agent to attach the client's previous Trip Sheets and their Client Profile if they have them. Work the same way with what's attached. New workspaces and trips go in a scratch folder as `workspace.md` says, and you hand back the files to download.
 
+**Lessons:** run `ta lessons "<agency folder>"` once, with no `--skill`, to get every lesson. Follow the ones for `fta` and `all` yourself. Pass each specialist its own lessons when you hand over (`minnie-ai`, `fiona-ai`, `park-itinerary`). In chat mode, ask for the Lessons workbook with the other files.
+
 ## 3. Route to the right specialist(s)
 
 Decide from the destination, attractions and special requirements:
@@ -51,7 +53,7 @@ Tell the agent who you're handing over to and why, in one line (e.g. "Handing ov
 
 **How to hand over:** load the specialist's skill and follow it. The specialist takes over the conversation for its part and guides the agent through research and quote preparation. When it's done, it gives you its **handoff**: park days and party details for Patty, priced quote lines with their sources, itinerary lines, and open questions. Then you take over again.
 
-**Background research (Claude Code and Cowork only):** if you can launch subagents, start the plugin's `minnie-ai-research` and/or `fiona-ai-research` agents **in the background** as soon as you know the dates, group and hotel area. Give them the dates, the number of adults and children with ages, the hotel (or "to choose"), and the ticket type. They look up current prices, park hours, closures and event nights, and return price lines with sources. Meanwhile the specialist keeps talking with the agent. Give their findings to the specialist when they arrive. Subagents never talk to the client and never decide anything: the agent confirms every price.
+**Background research (Claude Code and Cowork only):** if you can launch subagents, start the plugin's `minnie-ai-research` and/or `fiona-ai-research` agents **in the background** as soon as you know the dates, group and hotel area. Give them the dates, the number of adults and children with ages, the hotel (or "to choose"), and the ticket type. Also give them the specialist's lessons about providers, pricing, hotels and tickets, since they can't read the workbook. Never include client names or other personal data. They look up current prices, park hours, closures and event nights, and return price lines with sources. Meanwhile the specialist keeps talking with the agent. Give their findings to the specialist when they arrive. Subagents never talk to the client and never decide anything: the agent confirms every price.
 
 ## 4. One plan with Patty
 
@@ -117,6 +119,7 @@ ta quote-pdf quote.json "<trip folder>/3 - Quotes/Quote - <Client> - v1.pdf" --p
 2. **Client Profile:** add what you learned to the client's profile file: travelers with birth dates, kids' **heights with the date measured**, preferences, fears and accessibility needs, and a line under past trips such as "2026-12 Orlando Disney + Universal: quoted v1 USD 5,384". Edit the sections in place and keep them short. This is what makes the next request faster.
 3. **A message for the client**, ready to paste (WhatsApp or email, in the client's language and the agent's register), presenting the quote in 4–6 lines: what's included, the total, the validity date and the next step. Attach the PDF.
 4. **Next steps for the agent**, as a short list: what to verify before sending, when to follow up (before `valid_until`), and what to book first if the client accepts.
+5. **Learn.** Ask the agent one short question: "Anything MinnieAI, FionaAI, Patty or I should do differently next time?" Save each answer as a lesson for the right skill, as **Learning from the agent's feedback** in `references/workspace.md` says. Don't ask again about corrections already saved during the quote. Later, when the client **accepts or declines**, ask the agent why, if they know. If the reason will matter for other clients ("declined: Deluxe was too expensive for a family of 5"), offer it as a lesson. A reason that only concerns this client goes in their Client Profile.
 
 In chat mode, give the agent every updated file to download (Trip Sheet, quote PDF, Client Profile) and tell them where each one goes.
 

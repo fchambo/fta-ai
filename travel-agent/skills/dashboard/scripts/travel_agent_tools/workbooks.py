@@ -249,6 +249,7 @@ UPSERT_KEYS = {
     "products": ("provider_id", "product_id"),
     "incentives": ("provider_id", "period", "from_volume"),
     "tasks": ("task",),
+    "lessons": ("skill", "lesson"),
 }
 
 
