@@ -1,6 +1,12 @@
-# travel-agent: Claude plugin for freelance travel agents
+# travel-agent: AI toolkit for freelance travel agents
 
-Agents keep working in **Excel, Word and PDF**. Claude reads their vouchers, contracts and client replies, keeps their spreadsheets up to date, and writes their documents.
+Agents keep working in **Excel, Word and PDF**. The assistant reads their vouchers, contracts and client replies, keeps their spreadsheets up to date, and writes their documents.
+
+## Install in ChatGPT
+
+ChatGPT Skills are available on eligible Business, Enterprise, Healthcare, and Edu workspaces, subject to product availability and workspace settings. From the repository root, run `python3 tools/build.py --chatgpt`; this updates the shared skill files and creates one ZIP per skill under `dist/chatgpt/`. In ChatGPT, open **Plugins → Plugin Directory → Skills → Create → Upload from your computer**, then upload the ZIPs for the skills you want to install. Repeat for each skill ZIP. If Skills or uploading is unavailable, ask your workspace admin whether it is enabled.
+
+In ChatGPT, attach the current Trip Sheet, vouchers, contracts, or other source files to the conversation. Download the updated or generated files ChatGPT returns and save them in your agency folders. ChatGPT skills run in chat mode and do not access files on your computer directly. The Spanish slash commands below are Claude-only; you can still ask for any task in Spanish.
 
 | Skill | What the agent gets | Try saying |
 |---|---|---|
