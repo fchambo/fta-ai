@@ -21,7 +21,7 @@ claude plugin install travel-agent@fta-marketplace
 
 Python 3 is needed for Cowork and Claude Code ([python.org](https://www.python.org/downloads/); on Windows tick **"Add python.exe to PATH"**). Nothing is needed for Claude chat.
 
-**In ChatGPT (Plus and above):** build the skill zips (below), then in ChatGPT open **Skills** and upload each of the skill zips with **Upload from your computer**. In ChatGPT the agent attaches files to the chat and downloads the files ChatGPT returns. The Spanish slash commands are Claude-only, but Spanish requests work in both.
+**In ChatGPT:** ChatGPT Skills are available on eligible Business, Enterprise, Healthcare, and Edu workspaces, subject to workspace settings. Build the skill zips (below), then in ChatGPT open **Plugins → Plugin Directory → Skills → Create → Upload from your computer** and upload the ZIP for each skill you want. If Skills or uploading is unavailable, ask the workspace admin to enable it. The agent attaches files to the chat and downloads the files ChatGPT returns. Spanish slash commands are Claude-only; Spanish requests work in both.
 
 ## Build the upload zips
 
