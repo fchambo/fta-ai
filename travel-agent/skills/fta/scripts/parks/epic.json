@@ -1,0 +1,46 @@
+{
+  "id": "epic",
+  "name": "Universal Epic Universe",
+  "resort": "Universal Orlando Resort",
+  "operator": "universal",
+  "meters_per_unit": 10,
+  "entrance": [50, 2],
+  "landmark": {"name": "Celestial Park", "x": 50, "y": 40},
+  "data_checked": "2026-11",
+  "map_note": "Schematic layout: the four worlds open off Celestial Park through portals.",
+  "osm": {
+    "bbox": [28.436, -81.4545, 28.451, -81.441],
+    "boundary_way": 1372221500,
+    "entrance": [28.441561, -81.449506],
+    "landmark": "Celestial Park"
+  },
+  "lands": [
+    {"name": "Celestial Park", "x": 34, "y": 20, "w": 32, "h": 46, "color": "#F3D9A4"},
+    {"name": "SUPER NINTENDO WORLD", "x": 66, "y": 6, "w": 32, "h": 34, "color": "#FBC4B4"},
+    {"name": "How to Train Your Dragon – Isle of Berk", "x": 68, "y": 52, "w": 30, "h": 38, "color": "#BFE3A6"},
+    {"name": "The Wizarding World of Harry Potter – Ministry of Magic", "x": 32, "y": 70, "w": 34, "h": 27, "color": "#C9C2F2"},
+    {"name": "Dark Universe", "x": 2, "y": 50, "w": 30, "h": 38, "color": "#D6CFC4"}
+  ],
+  "water": [{"x": 50, "y": 40, "rx": 9, "ry": 5}],
+  "attractions": [
+    {"id": "stardust", "name": "Stardust Racers", "land": "Celestial Park", "x": 40, "y": 56, "type": "ride", "min": 3, "height_in": 48, "thrill": 3, "tags": ["coaster", "launch", "heights"], "lane": "express", "peak": 70, "single_rider": true, "access": "transfer"},
+    {"id": "constellation-carousel", "name": "Constellation Carousel", "land": "Celestial Park", "x": 59, "y": 30, "type": "ride", "min": 4, "height_in": 34, "thrill": 1, "tags": ["spin"], "lane": "express", "peak": 25, "access": "transfer", "verify": ["height_in"]},
+    {"id": "mario-kart", "name": "Mario Kart: Bowser's Challenge", "short": "Mario Kart", "land": "SUPER NINTENDO WORLD", "x": 76, "y": 20, "type": "ride", "min": 6, "height_in": 40, "thrill": 1, "tags": ["dark", "3d", "interactive"], "lane": "express", "peak": 70, "rope": true, "single_rider": true, "access": "transfer", "status_note": "AR headset with a fitting check at the entrance."},
+    {"id": "mine-cart", "name": "Mine-Cart Madness", "land": "SUPER NINTENDO WORLD", "x": 89, "y": 30, "type": "ride", "min": 3, "height_in": 40, "thrill": 2, "tags": ["coaster", "drops"], "lane": "express", "peak": 80, "rope": true, "access": "transfer"},
+    {"id": "yoshi", "name": "Yoshi's Adventure", "land": "SUPER NINTENDO WORLD", "x": 72, "y": 33, "type": "ride", "min": 5, "height_in": 34, "thrill": 0, "tags": ["heights"], "lane": "express", "peak": 40, "access": "transfer"},
+    {"id": "hiccup", "name": "Hiccup's Wing Gliders", "land": "How to Train Your Dragon – Isle of Berk", "x": 86, "y": 74, "type": "ride", "min": 2, "height_in": 48, "thrill": 2, "tags": ["coaster", "launch", "backwards"], "lane": "express", "peak": 55, "access": "transfer"},
+    {"id": "dragon-racer", "name": "Dragon Racer's Rally", "land": "How to Train Your Dragon – Isle of Berk", "x": 76, "y": 82, "type": "ride", "min": 2, "height_in": 48, "thrill": 3, "tags": ["spin", "heights"], "lane": "express", "peak": 40, "access": "transfer", "verify": ["height_in"]},
+    {"id": "fyre-drill", "name": "Fyre Drill", "land": "How to Train Your Dragon – Isle of Berk", "x": 73, "y": 62, "type": "ride", "min": 6, "thrill": 0, "tags": ["wet", "boat", "interactive"], "lane": "express", "peak": 30, "access": "transfer", "verify": ["height_in"]},
+    {"id": "untrainable-dragon", "name": "The Untrainable Dragon (show)", "short": "The Untrainable Dragon", "land": "How to Train Your Dragon – Isle of Berk", "x": 91, "y": 60, "type": "show", "min": 25, "thrill": 0, "tags": ["loud"], "lane": "express", "peak": 20, "access": "wheelchair"},
+    {"id": "ministry", "name": "Harry Potter and the Battle at the Ministry", "short": "Battle at the Ministry", "land": "The Wizarding World of Harry Potter – Ministry of Magic", "x": 50, "y": 86, "type": "ride", "min": 6, "height_in": 40, "thrill": 2, "tags": ["dark", "drops", "sim", "scary", "spin"], "lane": "express", "peak": 90, "rope": true, "single_rider": true, "access": "transfer"},
+    {"id": "cirque-arcanus", "name": "Le Cirque Arcanus (show)", "short": "Le Cirque Arcanus", "land": "The Wizarding World of Harry Potter – Ministry of Magic", "x": 38, "y": 80, "type": "show", "min": 20, "thrill": 0, "tags": ["loud"], "lane": "express", "peak": 15, "access": "wheelchair"},
+    {"id": "frankenstein", "name": "Monsters Unchained: The Frankenstein Experiment", "short": "Monsters Unchained", "land": "Dark Universe", "x": 12, "y": 65, "type": "ride", "min": 4, "height_in": 40, "thrill": 3, "tags": ["dark", "scary", "spin", "loud"], "lane": "express", "peak": 70, "single_rider": true, "access": "transfer"},
+    {"id": "werewolf", "name": "Curse of the Werewolf", "land": "Dark Universe", "x": 22, "y": 78, "type": "ride", "min": 2, "height_in": 40, "thrill": 2, "tags": ["coaster", "spin"], "lane": "express", "peak": 40, "access": "transfer"}
+  ],
+  "tips": [
+    "Waits are still the highest in Orlando: pick ONE world for rope drop (Ministry of Magic or Super Nintendo World) and do the other right after.",
+    "Universal Express for Epic Universe is sold separately: hotel 'unlimited Express' benefits don't apply here (verify).",
+    "SUPER NINTENDO WORLD may use timed entry (virtual line in the Universal app) on busy days.",
+    "Dark Universe is the most intense world for small kids: dark, loud and scary themes."
+  ]
+}

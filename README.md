@@ -2,6 +2,8 @@
 
 Claude Code plugin marketplace with **travel-agent**, a toolkit for freelance travel agents who work in Excel, Word and PDF.
 
+Its front door is **FTA**, the Freelance Travel AI Agent. It takes a client's request, recalls the client's past trips, hands Disney World to **MinnieAI** and Universal Orlando to **FionaAI**, and turns their research plus Patty's park plan into a priced client quote.
+
 It covers social media content, destination research, client questionnaires, trip folders with an Excel Trip Sheet, trip and payment summaries, provider commission tracking, and **Patty**, a Disney World / Universal Orlando park planner that delivers a client PDF with route maps. The workspace can be in English or Spanish.
 
 See [travel-agent/README.md](travel-agent/README.md) for what each skill does.
@@ -19,7 +21,7 @@ claude plugin install travel-agent@fta-marketplace
 
 Python 3 is needed for Cowork and Claude Code ([python.org](https://www.python.org/downloads/); on Windows tick **"Add python.exe to PATH"**). Nothing is needed for Claude chat.
 
-**In ChatGPT (Plus and above):** build the skill zips (below), then in ChatGPT open **Skills** and upload each of the seven zips with **Upload from your computer**. In ChatGPT the agent attaches files to the chat and downloads the files ChatGPT returns. The Spanish slash commands are Claude-only, but Spanish requests work in both.
+**In ChatGPT (Plus and above):** build the skill zips (below), then in ChatGPT open **Skills** and upload each of the skill zips with **Upload from your computer**. In ChatGPT the agent attaches files to the chat and downloads the files ChatGPT returns. The Spanish slash commands are Claude-only, but Spanish requests work in both.
 
 ## Build the upload zips
 

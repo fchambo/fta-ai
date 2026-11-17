@@ -1,6 +1,7 @@
 """Client PDF for a park plan: cover, booking calendar, then one section per park day
 with a map of the route (real park layout from OpenStreetMap when available), the fixed-time table and the full schedule."""
 import math
+import re
 from datetime import date
 from xml.sax.saxutils import escape
 
@@ -121,6 +122,59 @@ MONTHS_ES = ("ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct
 
 FIXED_COLOR, FLEX_COLOR, ROUTE_COLOR = "#EA580C", "#0F766E", "#4150F7"
 ARROW_COLOR = "#16A34A"
+FIXED_TINT = "#FFEDD5"
+DEFAULTS = (FLEX_COLOR, FIXED_COLOR, ROUTE_COLOR, ARROW_COLOR, FIXED_TINT)
+
+
+def parse_palette(text):
+    """'#0F766E, #EA580C, 4150F7' -> ['#0F766E', '#EA580C', '#4150F7'] (up to 3 brand colors)."""
+    found = re.findall(r"#?\b([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})\b", str(text or ""))
+    out = []
+    for h in found[:3]:
+        if len(h) == 3:
+            h = "".join(c * 2 for c in h)
+        out.append("#" + h.upper())
+    return out
+
+
+def _mix(hex_color, white=0.85):
+    r, g, b = (int(hex_color[i:i + 2], 16) for i in (1, 3, 5))
+    return "#%02X%02X%02X" % tuple(round(c + (255 - c) * white) for c in (r, g, b))
+
+
+def _lum(hex_color):
+    r, g, b = (int(hex_color.lstrip("#")[i:i + 2], 16) / 255 for i in (0, 2, 4))
+    return sum(w * (c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4) for w, c in zip((0.2126, 0.7152, 0.0722), (r, g, b)))
+
+
+def text_on(hex_color):
+    """White or dark text, whichever reads better on this color."""
+    return "#FFFFFF" if _lum(hex_color) < 0.45 else "#1F2937"
+
+
+def on_white(hex_color):
+    """The same hue, darkened until it stands out on white (contrast 3:1), for text and map marks."""
+    r, g, b = (int(hex_color.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4))
+    for _ in range(40):
+        out = "#%02X%02X%02X" % (r, g, b)
+        if (1.05) / (_lum(out) + 0.05) >= 3:
+            return out
+        r, g, b = (round(c * 0.92) for c in (r, g, b))
+    return out
+
+
+def set_palette(brand):
+    """Brand colors in order (main, second, accent) fill the plan's color slots:
+    main = headings, table headers and flexible stops; second = fixed-time stops and route arrows;
+    accent = the walking route. No colors: the default look."""
+    global FLEX_COLOR, FIXED_COLOR, ROUTE_COLOR, ARROW_COLOR, FIXED_TINT
+    FLEX_COLOR, FIXED_COLOR, ROUTE_COLOR, ARROW_COLOR, FIXED_TINT = DEFAULTS
+    if brand:
+        main = brand[0]
+        second = brand[1] if len(brand) > 1 else DEFAULTS[1]
+        accent = brand[2] if len(brand) > 2 else main
+        FLEX_COLOR, FIXED_COLOR, ROUTE_COLOR, ARROW_COLOR = (on_white(c) for c in (main, second, accent, second))
+        FIXED_TINT = _mix(second)
 ROUTE_DOTS = [0.1, 4]
 
 
@@ -373,7 +427,8 @@ def _osm_map(park, day, lang, font, width, net):
             d.add(Rect(box[0], box[1], w, 8.6, rx=2, ry=2, fillColor=colors.Color(1, 1, 1, alpha=0.9), strokeColor=None))
             d.add(String(box[0] + 2, box[1] + 2.2, label, fontName=font, fontSize=6, fillColor=colors.HexColor("#1F2937")))
         d.add(Circle(cx, cy, 6.5, fillColor=color, strokeColor=colors.white, strokeWidth=1.2))
-        d.add(String(cx, cy - 2.6, str(s["n"]), fontName=font, fontSize=7, textAnchor="middle", fillColor=colors.white))
+        d.add(String(cx, cy - 2.6, str(s["n"]), fontName=font, fontSize=7, textAnchor="middle",
+                     fillColor=colors.HexColor(text_on(FIXED_COLOR if s.get("fixed") else FLEX_COLOR))))
 
     # land names and the landmark, on top of the route but out of the way of pins and labels
     by_land = {}
@@ -493,7 +548,8 @@ def park_map(park, day, lang, font, width):
         placed.append((cx, cy))
         color = colors.HexColor(FIXED_COLOR if s.get("fixed") else FLEX_COLOR)
         d.add(Circle(cx, cy, 6.5, fillColor=color, strokeColor=colors.white, strokeWidth=1))
-        d.add(String(cx, cy - 2.6, str(s["n"]), fontName=font, fontSize=7, textAnchor="middle", fillColor=colors.white))
+        d.add(String(cx, cy - 2.6, str(s["n"]), fontName=font, fontSize=7, textAnchor="middle",
+                     fillColor=colors.HexColor(text_on(FIXED_COLOR if s.get("fixed") else FLEX_COLOR))))
         label = short_name(s.get("short") or s.get("name") or "")
         if label:
             d.add(String(cx + 8.5, cy - 2.2, label, fontName=font, fontSize=5.6, fillColor=colors.HexColor("#1F2937")))
@@ -587,21 +643,49 @@ def excluded_text(e, lang):
 
 # --- document --------------------------------------------------------------------
 
-def render(plan, out_path, footer=None, color="0F766E"):
+def render(plan, out_path, footer=None, color=None, palette=None):
+    """palette: the agency's brand colors (main, second, accent), as a list or text; color: main color only."""
+    from reportlab.lib import colors
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib.units import cm
+    from reportlab.platypus import SimpleDocTemplate
+
+    story, lang, font = build_story(plan, color=color, palette=palette)
+
+    def decorate(canvas, doc):
+        canvas.setFont(font, 7.5)
+        canvas.setFillColor(colors.HexColor("#6B7280"))
+        if footer:
+            canvas.drawString(1.8 * cm, 1.1 * cm, footer)
+        canvas.drawRightString(A4[0] - 1.8 * cm, 1.1 * cm, str(doc.page))
+
+    SimpleDocTemplate(out_path, pagesize=A4, title=tr(lang, "title"), leftMargin=1.8 * cm, rightMargin=1.8 * cm,
+                      topMargin=1.6 * cm, bottomMargin=1.8 * cm).build(story, onFirstPage=decorate, onLaterPages=decorate)
+    return out_path
+
+
+def build_story(plan, color=None, palette=None):
+    """The park plan as reportlab flowables (cover + one section per day), for render() or a quote PDF.
+    Returns (story, lang, font)."""
     from reportlab.lib import colors
     from reportlab.lib.pagesizes import A4
     from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
     from reportlab.lib.units import cm
-    from reportlab.platypus import (CondPageBreak, KeepTogether, PageBreak, Paragraph, SimpleDocTemplate, Spacer,
-                                    Table, TableStyle)
+    from reportlab.platypus import CondPageBreak, KeepTogether, PageBreak, Paragraph, Spacer, Table, TableStyle
 
     lang = plan.get("lang", "en") if plan.get("lang") in ("en", "es") else "en"
     font = _pdf_font()
-    accent = colors.HexColor("#" + color.lstrip("#"))
+    brand = parse_palette(palette) if isinstance(palette, str) else list(palette or [])
+    if not brand and color:
+        brand = parse_palette(color)
+    set_palette(brand)
+    main = brand[0] if brand else FLEX_COLOR
+    accent = colors.HexColor(on_white(main))  # headings
+    band = colors.HexColor(main)  # table headers, with readable text on top
     base = getSampleStyleSheet()
     body = ParagraphStyle("b", parent=base["BodyText"], fontName=font, fontSize=9.5, leading=12.5)
     small = ParagraphStyle("s", parent=body, fontSize=8.2, leading=10.4)
-    th = ParagraphStyle("th", parent=small, textColor=colors.white)
+    th = ParagraphStyle("th", parent=small, textColor=colors.HexColor(text_on(main)))
     h0 = ParagraphStyle("h0", parent=body, fontSize=22, leading=26, textColor=accent, spaceAfter=4)
     h1 = ParagraphStyle("h1", parent=body, fontSize=15, leading=19, textColor=accent, spaceBefore=4, spaceAfter=4)
     h2 = ParagraphStyle("h2", parent=body, fontSize=11.5, leading=15, textColor=accent, spaceBefore=8, spaceAfter=4)
@@ -615,12 +699,12 @@ def render(plan, out_path, footer=None, color="0F766E"):
     def table(header, rows, widths, highlight=None):
         data = [[para(h, th) for h in header]] + [[para(c, small) for c in r] for r in rows]
         t = Table(data, colWidths=[usable * w for w in widths], repeatRows=1, hAlign="LEFT")
-        style = [("BACKGROUND", (0, 0), (-1, 0), accent), ("VALIGN", (0, 0), (-1, -1), "TOP"),
+        style = [("BACKGROUND", (0, 0), (-1, 0), band), ("VALIGN", (0, 0), (-1, -1), "TOP"),
                  ("GRID", (0, 0), (-1, -1), 0.3, colors.HexColor("#CBD5E1")),
                  ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.white, colors.HexColor("#F8FAFC")]),
                  ("TOPPADDING", (0, 0), (-1, -1), 3), ("BOTTOMPADDING", (0, 0), (-1, -1), 3)]
         for i in highlight or []:
-            style.append(("BACKGROUND", (0, i + 1), (-1, i + 1), colors.HexColor("#FFEDD5")))
+            style.append(("BACKGROUND", (0, i + 1), (-1, i + 1), colors.HexColor(FIXED_TINT)))
         t.setStyle(TableStyle(style))
         return t
 
@@ -716,13 +800,4 @@ def render(plan, out_path, footer=None, color="0F766E"):
             for tip in day_tips:
                 story.append(Paragraph("• " + escape(tip), small))
 
-    def decorate(canvas, doc):
-        canvas.setFont(font, 7.5)
-        canvas.setFillColor(colors.HexColor("#6B7280"))
-        if footer:
-            canvas.drawString(1.8 * cm, 1.1 * cm, footer)
-        canvas.drawRightString(A4[0] - 1.8 * cm, 1.1 * cm, str(doc.page))
-
-    SimpleDocTemplate(out_path, pagesize=A4, title=tr(lang, "title"), leftMargin=1.8 * cm, rightMargin=1.8 * cm,
-                      topMargin=1.6 * cm, bottomMargin=1.8 * cm).build(story, onFirstPage=decorate, onLaterPages=decorate)
-    return out_path
+    return story, lang, font

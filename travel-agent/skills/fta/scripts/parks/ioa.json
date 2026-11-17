@@ -1,0 +1,54 @@
+{
+  "id": "ioa",
+  "name": "Universal Islands of Adventure",
+  "resort": "Universal Orlando Resort",
+  "operator": "universal",
+  "meters_per_unit": 9,
+  "entrance": [50, 2],
+  "landmark": {"name": "Lagoon", "x": 50, "y": 48},
+  "data_checked": "2026-11",
+  "osm": {
+    "bbox": [28.4676, -81.4757, 28.4761, -81.4662],
+    "boundary_relation": 1124085,
+    "entrance": [28.4721, -81.4683],
+    "landmark": "Islands of Adventure Lagoon",
+    "names": {"ripsaw": "Dudley Doo-Right's Ripsaw Falls", "hogwarts-express-hm": "Hogsmeade Station"}
+  },
+  "lands": [
+    {"name": "Port of Entry", "x": 42, "y": 2, "w": 16, "h": 16, "color": "#F3D9A4"},
+    {"name": "Marvel Super Hero Island", "x": 62, "y": 8, "w": 34, "h": 32, "color": "#CDD5FD"},
+    {"name": "Toon Lagoon", "x": 76, "y": 42, "w": 22, "h": 24, "color": "#FBE38E"},
+    {"name": "Skull Island", "x": 72, "y": 66, "w": 22, "h": 14, "color": "#D6CFC4"},
+    {"name": "Jurassic Park", "x": 44, "y": 72, "w": 32, "h": 25, "color": "#BFE3A6"},
+    {"name": "The Wizarding World of Harry Potter – Hogsmeade", "x": 8, "y": 70, "w": 36, "h": 27, "color": "#C9C2F2"},
+    {"name": "The Lost Continent", "x": 2, "y": 46, "w": 22, "h": 22, "color": "#E9C79C"},
+    {"name": "Seuss Landing", "x": 8, "y": 14, "w": 30, "h": 30, "color": "#F6C9E0"}
+  ],
+  "water": [{"x": 50, "y": 46, "rx": 20, "ry": 16}],
+  "attractions": [
+    {"id": "spiderman", "name": "The Amazing Adventures of Spider-Man", "short": "Spider-Man", "land": "Marvel Super Hero Island", "x": 68, "y": 17, "type": "ride", "min": 5, "height_in": 40, "thrill": 2, "tags": ["sim", "3d", "dark", "drops"], "lane": "express", "peak": 25, "single_rider": true, "access": "transfer"},
+    {"id": "hulk", "name": "The Incredible Hulk Coaster", "short": "Hulk Coaster", "land": "Marvel Super Hero Island", "x": 80, "y": 25, "type": "ride", "min": 3, "height_in": 54, "thrill": 3, "tags": ["coaster", "launch", "heights"], "lane": "express", "peak": 35, "single_rider": true, "access": "transfer", "status_note": "Lockers are mandatory: no loose items."},
+    {"id": "doom", "name": "Doctor Doom's Fearfall", "land": "Marvel Super Hero Island", "x": 90, "y": 35, "type": "ride", "min": 2, "height_in": 52, "thrill": 3, "tags": ["drops", "heights", "launch"], "lane": "express", "peak": 15, "access": "transfer"},
+    {"id": "storm", "name": "Storm Force Accelatron", "short": "Storm Force", "land": "Marvel Super Hero Island", "x": 72, "y": 31, "type": "ride", "min": 2, "thrill": 1, "tags": ["spin"], "lane": "express", "peak": 10, "access": "transfer"},
+    {"id": "ripsaw", "name": "Dudley Do-Right's Ripsaw Falls", "short": "Ripsaw Falls", "land": "Toon Lagoon", "x": 90, "y": 48, "type": "ride", "min": 6, "height_in": 44, "thrill": 2, "tags": ["wet", "drops"], "lane": "express", "peak": 30, "access": "transfer", "status_note": "You will get soaked."},
+    {"id": "bilge-rat", "name": "Popeye & Bluto's Bilge-Rat Barges", "short": "Bilge-Rat Barges", "land": "Toon Lagoon", "x": 84, "y": 59, "type": "ride", "min": 6, "height_in": 42, "thrill": 2, "tags": ["wet", "spin"], "lane": "express", "peak": 30, "access": "transfer", "status_note": "You will get soaked."},
+    {"id": "kong", "name": "Skull Island: Reign of Kong", "short": "Reign of Kong", "land": "Skull Island", "x": 82, "y": 73, "type": "ride", "min": 6, "height_in": 36, "thrill": 2, "tags": ["3d", "dark", "scary", "loud"], "lane": "express", "peak": 30, "access": "transfer"},
+    {"id": "velocicoaster", "name": "Jurassic World VelociCoaster", "land": "Jurassic Park", "x": 50, "y": 90, "type": "ride", "min": 2, "height_in": 51, "thrill": 3, "tags": ["coaster", "launch", "heights"], "lane": "express", "peak": 70, "rope": true, "single_rider": true, "access": "transfer", "status_note": "Lockers are mandatory: no loose items."},
+    {"id": "jp-river", "name": "Jurassic Park River Adventure", "land": "Jurassic Park", "x": 66, "y": 81, "type": "ride", "min": 7, "height_in": 42, "thrill": 2, "tags": ["wet", "drops", "dark", "scary"], "lane": "express", "peak": 30, "access": "transfer"},
+    {"id": "pteranodon", "name": "Pteranodon Flyers", "land": "Jurassic Park", "x": 57, "y": 77, "type": "ride", "min": 2, "height_in": 36, "max_height_in": 56, "needs_child": true, "thrill": 1, "tags": ["heights"], "lane": null, "peak": 40, "access": "transfer", "status_note": "Guests over 56 in / 142 cm ride only with a child between 36 and 56 in."},
+    {"id": "hagrids", "name": "Hagrid's Magical Creatures Motorbike Adventure", "short": "Hagrid's Motorbike", "land": "The Wizarding World of Harry Potter – Hogsmeade", "x": 16, "y": 91, "type": "ride", "min": 4, "height_in": 48, "thrill": 3, "tags": ["coaster", "launch", "drops", "backwards", "dark"], "lane": null, "peak": 90, "rope": true, "access": "transfer", "status_note": "Not on Universal Express: the only way to shorten the wait is to arrive at opening (or with Early Park Admission)."},
+    {"id": "forbidden-journey", "name": "Harry Potter and the Forbidden Journey", "short": "Forbidden Journey", "land": "The Wizarding World of Harry Potter – Hogsmeade", "x": 30, "y": 88, "type": "ride", "min": 5, "height_in": 48, "thrill": 3, "tags": ["sim", "dark", "scary", "spin", "heights"], "lane": "express", "peak": 45, "single_rider": true, "access": "transfer", "status_note": "Strong motion sickness ride. Try the test seat at the entrance if you're unsure about the restraint."},
+    {"id": "hippogriff", "name": "Flight of the Hippogriff", "land": "The Wizarding World of Harry Potter – Hogsmeade", "x": 38, "y": 79, "type": "ride", "min": 2, "height_in": 36, "thrill": 1, "tags": ["coaster"], "lane": "express", "peak": 30, "access": "transfer"},
+    {"id": "hogwarts-express-hm", "name": "Hogwarts Express – Hogsmeade Station (to Universal Studios)", "short": "Hogwarts Express", "land": "The Wizarding World of Harry Potter – Hogsmeade", "x": 13, "y": 76, "type": "ride", "min": 6, "thrill": 0, "tags": [], "lane": null, "peak": 20, "access": "wheelchair", "requires": "park-to-park", "status_note": "Needs a Park-to-Park ticket. Ends at King's Cross in Universal Studios Florida."},
+    {"id": "cat-hat", "name": "The Cat in The Hat", "short": "The Cat in the Hat", "land": "Seuss Landing", "x": 23, "y": 21, "type": "ride", "min": 4, "height_in": 36, "thrill": 1, "tags": ["dark", "spin"], "lane": "express", "peak": 20, "access": "transfer"},
+    {"id": "one-fish", "name": "One Fish, Two Fish, Red Fish, Blue Fish", "short": "One Fish, Two Fish", "land": "Seuss Landing", "x": 14, "y": 29, "type": "ride", "min": 2, "thrill": 0, "tags": ["wet", "spin", "heights"], "lane": "express", "peak": 15, "access": "transfer"},
+    {"id": "seuss-trolley", "name": "The High in the Sky Seuss Trolley Train Ride!", "short": "Seuss Trolley", "land": "Seuss Landing", "x": 24, "y": 35, "type": "ride", "min": 4, "height_in": 34, "thrill": 0, "tags": ["heights"], "lane": "express", "peak": 15, "access": "transfer"},
+    {"id": "caro-seuss-el", "name": "Caro-Seuss-el", "land": "Seuss Landing", "x": 32, "y": 26, "type": "ride", "min": 3, "thrill": 0, "tags": [], "lane": "express", "peak": 10, "access": "wheelchair"}
+  ],
+  "tips": [
+    "Hagrid's has no Express and the longest wait: go straight there at opening, then Forbidden Journey and VelociCoaster.",
+    "Water rides (Ripsaw Falls, Bilge-Rat Barges, River Adventure) soak you: do them in the afternoon heat and bring ponchos.",
+    "Seuss Landing and Camp Jurassic are the best areas for small kids.",
+    "Lockers are mandatory (free for a short time) for Hulk, VelociCoaster, Hagrid's and Forbidden Journey."
+  ]
+}

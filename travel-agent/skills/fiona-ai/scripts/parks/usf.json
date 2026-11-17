@@ -1,0 +1,55 @@
+{
+  "id": "usf",
+  "name": "Universal Studios Florida",
+  "resort": "Universal Orlando Resort",
+  "operator": "universal",
+  "meters_per_unit": 8.5,
+  "entrance": [62, 2],
+  "landmark": {"name": "Lagoon", "x": 50, "y": 50},
+  "data_checked": "2026-11",
+  "osm": {
+    "bbox": [28.4718, -81.4745, 28.4826, -81.4639],
+    "boundary_way": 449808332,
+    "entrance": [28.4748, -81.4683],
+    "landmark": "Universal Lagoon",
+    "names": {"transformers": "transformerstm the ride 3d", "horror-makeup": "universals horror make up show", "hogwarts-express-kc": "Kings Cross Station"},
+    "points": {"trollercoaster": [28.47835, -81.46612], "rip-ride": [28.4752, -81.469], "mega-parade": [28.4755, -81.468]},
+    "walk_grid": 8
+  },
+  "lands": [
+    {"name": "Production Central", "x": 60, "y": 4, "w": 32, "h": 28, "color": "#F3D9A4"},
+    {"name": "New York", "x": 74, "y": 34, "w": 24, "h": 32, "color": "#CDD5FD"},
+    {"name": "San Francisco", "x": 54, "y": 70, "w": 28, "h": 24, "color": "#E9C79C"},
+    {"name": "The Wizarding World of Harry Potter – Diagon Alley", "x": 24, "y": 72, "w": 30, "h": 25, "color": "#D6CFC4"},
+    {"name": "World Expo", "x": 6, "y": 60, "w": 22, "h": 22, "color": "#C9C2F2"},
+    {"name": "Springfield", "x": 2, "y": 38, "w": 24, "h": 22, "color": "#FBE38E"},
+    {"name": "DreamWorks Land", "x": 12, "y": 20, "w": 20, "h": 18, "color": "#BFE3A6"},
+    {"name": "Hollywood", "x": 30, "y": 4, "w": 30, "h": 20, "color": "#F6C9E0"}
+  ],
+  "water": [{"x": 50, "y": 50, "rx": 17, "ry": 13}],
+  "attractions": [
+    {"id": "minion-mayhem", "name": "Despicable Me Minion Mayhem", "short": "Minion Mayhem", "land": "Production Central", "x": 66, "y": 14, "type": "ride", "min": 6, "height_in": 40, "thrill": 1, "tags": ["sim", "3d"], "lane": "express", "peak": 45, "access": "transfer", "status_note": "Stationary seating is available for guests under 40 in or who prefer no motion."},
+    {"id": "villain-con", "name": "Illumination's Villain-Con Minion Blast", "short": "Villain-Con Minion Blast", "land": "Production Central", "x": 73, "y": 9, "type": "ride", "min": 6, "thrill": 0, "tags": ["interactive", "dark"], "lane": "express", "peak": 30, "access": "wheelchair"},
+    {"id": "rip-ride", "name": "Hollywood Rip Ride Rockit", "short": "Rip Ride Rockit", "land": "Production Central", "x": 76, "y": 25, "type": "ride", "min": 2, "height_in": 51, "thrill": 3, "tags": ["coaster", "heights", "loud"], "lane": "express", "peak": 40, "single_rider": true, "access": "transfer", "status_note": "Loose items are not allowed: lockers are mandatory."},
+    {"id": "transformers", "name": "TRANSFORMERS: The Ride-3D", "short": "Transformers", "land": "Production Central", "x": 87, "y": 20, "type": "ride", "min": 5, "height_in": 40, "thrill": 2, "tags": ["sim", "3d", "dark", "loud"], "lane": "express", "peak": 30, "single_rider": true, "access": "transfer"},
+    {"id": "race-ny", "name": "Race Through New York Starring Jimmy Fallon", "short": "Race Through New York", "land": "New York", "x": 81, "y": 40, "type": "ride", "min": 6, "height_in": 40, "thrill": 1, "tags": ["sim", "3d"], "lane": "express", "peak": 25, "access": "transfer"},
+    {"id": "mummy", "name": "Revenge of the Mummy", "land": "New York", "x": 88, "y": 51, "type": "ride", "min": 3, "height_in": 48, "thrill": 3, "tags": ["coaster", "dark", "launch", "scary", "backwards", "fire"], "lane": "express", "peak": 40, "single_rider": true, "access": "transfer"},
+    {"id": "bourne", "name": "The Bourne Stuntacular", "short": "Bourne Stuntacular", "land": "New York", "x": 90, "y": 62, "type": "show", "min": 25, "thrill": 0, "tags": ["loud"], "lane": "express", "peak": 10, "access": "wheelchair"},
+    {"id": "fast-furious", "name": "Fast & Furious – Supercharged", "short": "Fast & Furious", "land": "San Francisco", "x": 68, "y": 82, "type": "ride", "min": 6, "height_in": 40, "thrill": 1, "tags": ["sim", "loud"], "lane": "express", "peak": 20, "access": "transfer"},
+    {"id": "gringotts", "name": "Harry Potter and the Escape from Gringotts", "short": "Escape from Gringotts", "land": "The Wizarding World of Harry Potter – Diagon Alley", "x": 40, "y": 86, "type": "ride", "min": 5, "height_in": 42, "thrill": 2, "tags": ["coaster", "dark", "sim", "drops", "scary", "3d"], "lane": "express", "peak": 55, "rope": true, "single_rider": true, "access": "transfer"},
+    {"id": "hogwarts-express-kc", "name": "Hogwarts Express – King's Cross Station (to Islands of Adventure)", "short": "Hogwarts Express", "land": "The Wizarding World of Harry Potter – Diagon Alley", "x": 29, "y": 80, "type": "ride", "min": 6, "thrill": 0, "tags": [], "lane": null, "peak": 20, "access": "wheelchair", "requires": "park-to-park", "status_note": "Needs a Park-to-Park ticket. Ends in Hogsmeade at Islands of Adventure."},
+    {"id": "mib", "name": "MEN IN BLACK Alien Attack", "short": "Men in Black", "land": "World Expo", "x": 16, "y": 70, "type": "ride", "min": 5, "height_in": 42, "thrill": 2, "tags": ["spin", "interactive", "dark"], "lane": "express", "peak": 30, "single_rider": true, "access": "transfer"},
+    {"id": "simpsons", "name": "The Simpsons Ride", "land": "Springfield", "x": 9, "y": 50, "type": "ride", "min": 6, "height_in": 40, "thrill": 2, "tags": ["sim", "loud"], "lane": "express", "peak": 25, "access": "transfer"},
+    {"id": "kang-kodos", "name": "Kang & Kodos' Twirl 'n' Hurl", "short": "Kang & Kodos", "land": "Springfield", "x": 20, "y": 45, "type": "ride", "min": 2, "thrill": 0, "tags": ["spin", "heights"], "lane": "express", "peak": 10, "access": "transfer"},
+    {"id": "trollercoaster", "name": "Trolls Trollercoaster", "short": "Trollercoaster", "land": "DreamWorks Land", "x": 20, "y": 28, "type": "ride", "min": 2, "height_in": 36, "thrill": 1, "tags": ["coaster"], "lane": "express", "peak": 30, "access": "transfer"},
+    {"id": "et", "name": "E.T. Adventure", "land": "Hollywood", "x": 36, "y": 14, "type": "ride", "min": 5, "height_in": 34, "thrill": 1, "tags": ["dark", "heights"], "lane": "express", "peak": 25, "access": "transfer"},
+    {"id": "horror-makeup", "name": "Universal Horror Make-Up Show", "short": "Horror Make-Up Show", "land": "Hollywood", "x": 49, "y": 14, "type": "show", "min": 25, "thrill": 0, "tags": ["scary", "loud"], "lane": "express", "peak": 5, "access": "wheelchair"},
+    {"id": "mega-parade", "name": "Universal Mega Movie Parade", "short": "Mega Movie Parade", "land": "Hollywood", "x": 54, "y": 26, "type": "parade", "min": 20, "thrill": 0, "tags": ["loud"], "lane": null, "peak": 20, "access": "wheelchair", "status": "verify", "status_note": "Check the parade schedule for your date."}
+  ],
+  "tips": [
+    "Gringotts gets the longest lines: do it at opening or with Express. With a Park-to-Park ticket, take the Hogwarts Express to Islands of Adventure.",
+    "Universal Express (sold separately, or unlimited when you stay at Portofino Bay, Hard Rock or Royal Pacific) cuts waits on most rides. It's not a timed reservation.",
+    "Single rider lines (Gringotts, Mummy, Rip Ride Rockit, MIB, Transformers) save a lot of time for teens and adults who don't mind riding apart.",
+    "Child Swap: everyone waits in line once and the adults take turns riding."
+  ]
+}

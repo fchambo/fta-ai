@@ -14,8 +14,9 @@ First read `references/workspace.md` in this skill's folder (`${CLAUDE_SKILL_DIR
 **Folder mode:** if `ta find-trips <dir>` finds nothing and there's no `.travel-agent.json`, ask for:
 - the folder where they keep client files (suggest `~/Documents/Agency` or `~/Documents/Agencia`)
 - their working language (English or Spanish), agency/brand name, and main currency
+- their brand colors (up to 3 hex codes, main first), used on client PDFs. Optional: if they don't have them handy, skip it; the skills that make client documents ask later.
 
-Then run `ta init …` and tell them what was created. Ask them to fill in the **Providers & Commissions** workbook (or offer to do it with the **commissions** skill).
+Then run `ta init …` and tell them what was created. If they gave brand colors, save them with `update-providers` (`{"settings": {"brand_colors": "#0F766E, #EA580C"}}`). Ask them to fill in the **Providers & Commissions** workbook (or offer to do it with the **commissions** skill).
 
 ## New trip
 

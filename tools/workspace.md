@@ -20,6 +20,9 @@ All file work goes through one Python script, `ta.py`, in this skill's `scripts/
 | `ta read-doc <file.docx/.xlsx>` | Extract the text of a Word or Excel file |
 | `ta parks` · `park-info <park> [--party …]` | Theme parks with planning data, and who can ride what (park-itinerary skill only) |
 | `ta park-plan <request.json> [--out plan.json]` · `park-pdf <plan.json> <out.pdf>` | Plan park days, and render the client PDF with route maps (park-itinerary skill only) |
+| `ta client <base> "<name>" [--create]` | Find a client (ignores accents and case): their profile and a summary of every past trip. `--create` makes the client folder and profile |
+| `ta quote <quote.json> [--providers <xlsx>]` | Price a quote: totals, per person, payment schedule, **internal** commission estimate, warnings, and rows ready for `update-trip` |
+| `ta quote-pdf <quote.json> <out.pdf> [--plan plan.json] [--palette …]` | Client quote PDF: itinerary, prices, payments, conditions, plus Patty's park plan with `--plan` |
 
 Read **PDFs** (vouchers, confirmations, rate sheets, passports) and images (screenshots of WhatsApp chats or tickets) with your own file-reading ability.
 
@@ -54,9 +57,11 @@ Read **PDFs** (vouchers, confirmations, rate sheets, passports) and images (scre
 
 ```
 <agency folder>/
-├── Clients|Clientes/<Client>/<YYYY-MM Destination>/
-│   ├── Trip Sheet - <Client> - <Destination>.xlsx   ← the trip's source of truth
-│   ├── 1 - Intake … 8 - Photos & Reviews
+├── Clients|Clientes/<Client>/
+│   ├── Client Profile.md                             ← what we remember about the client (Claude keeps it)
+│   └── <YYYY-MM Destination>/
+│       ├── Trip Sheet - <Client> - <Destination>.xlsx   ← the trip's source of truth
+│       ├── 1 - Intake … 8 - Photos & Reviews
 ├── Commissions|Comisiones/Providers & Commissions.xlsx
 ├── Marketing/
 └── Destinations|Destinos/
@@ -101,6 +106,8 @@ Agent-facing text defaults to the agent's own form. Use neutral Spanish when you
 | Brand profile | `Brand Profile.docx` | `Perfil de Marca.docx` |
 | What's due | `Due This Week - <YYYY-MM-DD>.xlsx` | `Vencimientos de la Semana - <AAAA-MM-DD>.xlsx` |
 | Park plan | `Park Plan - <Client>.pdf` | `Plan de Parques - <Cliente>.pdf` |
+| Quote | `Quote - <Client> - v<N>.pdf` | `Cotización - <Cliente> - v<N>.pdf` |
+| Client profile | `Client Profile.md` (in the client folder) | `Perfil del Cliente.md` |
 
 **Travel-trade glossary.** Use the terms agents use, not literal translations:
 | English | Spanish (LatAm) | Notes |
@@ -141,6 +148,7 @@ Agent-facing text defaults to the agent's own form. Use neutral Spanish when you
 2. Run `ta docx draft.md "<destination>/<Nice Name>.docx" [--pdf]`. In folder mode the destination is the right trip subfolder; in chat mode it's the folder you hand files out from.
    - Use **`--pdf` for anything going to a client.** The PDF is generated directly and doesn't need Word.
    - Add `--footer "<agency name> · <license/legajo>"` when `agency_name` is set in the providers workbook Settings sheet.
+   - Use the agency's main brand color for client documents: `--color <first color of brand_colors>` from the same Settings sheet.
 3. Name files the way a person would, using the file-name table in **Language**. Don't use slugs.
 4. Never leave the markdown draft in the agency folder or the outputs folder.
 5. Status markers ✅ 🔴 🟡 ⚪ render correctly in both the Word document and the PDF.

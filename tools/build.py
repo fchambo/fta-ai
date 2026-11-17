@@ -24,6 +24,10 @@ TOOLS = os.path.join(ROOT, "tools")
 SKILLS = os.path.join(ROOT, "travel-agent", "skills")
 CHATGPT_DIST = os.path.join(ROOT, "dist", "chatgpt")
 PACKAGE = "travel_agent_tools"
+# Park data lives in park-itinerary (Patty). Skills that also run park plans or quote PDFs with maps
+# get a copy, because in Claude chat and ChatGPT a skill only sees its own folder.
+PARK_DATA_SOURCE = os.path.join(SKILLS, "park-itinerary", "scripts", "parks")
+PARK_DATA_SKILLS = ("fta", "minnie-ai", "fiona-ai")
 PLATFORM_BLOCK = re.compile(r"<!-- only:(\w+) -->\n(.*?)<!-- /only -->\n", re.S)
 
 CLAUDE_INTRO = re.compile(r"^First read `references/workspace\.md` in this skill's folder \(`\$\{CLAUDE_SKILL_DIR\}.*$", re.M)
@@ -51,6 +55,19 @@ def shared_files(platform):
     return files
 
 
+def park_data():
+    """{relative path under scripts/parks: bytes}"""
+    files = {}
+    for folder, dirs, names in os.walk(PARK_DATA_SOURCE):
+        dirs[:] = [d for d in dirs if d != "__pycache__"]
+        for name in names:
+            if name == ".DS_Store":
+                continue
+            path = os.path.join(folder, name)
+            files["scripts/parks/" + os.path.relpath(path, PARK_DATA_SOURCE).replace(os.sep, "/")] = open(path, "rb").read()
+    return files
+
+
 def skill_dirs():
     return [os.path.join(SKILLS, d) for d in sorted(os.listdir(SKILLS))
             if os.path.isfile(os.path.join(SKILLS, d, "SKILL.md"))]
@@ -58,8 +75,19 @@ def skill_dirs():
 
 def sync_claude(check):
     stale = []
-    files = shared_files("claude")
+    shared = shared_files("claude")
+    parks = park_data()
     for skill_dir in skill_dirs():
+        files = {**shared, **(parks if os.path.basename(skill_dir) in PARK_DATA_SKILLS else {})}
+        parks_dir = os.path.join(skill_dir, "scripts", "parks")
+        if os.path.basename(skill_dir) in PARK_DATA_SKILLS and os.path.isdir(parks_dir):
+            for folder, _, names in os.walk(parks_dir):
+                for name in names:
+                    rel = "scripts/parks/" + os.path.relpath(os.path.join(folder, name), parks_dir).replace(os.sep, "/")
+                    if rel not in files:
+                        stale.append(os.path.join(folder, name))
+                        if not check:
+                            os.remove(os.path.join(folder, name))
         pkg_dir = os.path.join(skill_dir, "scripts", PACKAGE)
         if os.path.isdir(pkg_dir):
             for name in os.listdir(pkg_dir):
