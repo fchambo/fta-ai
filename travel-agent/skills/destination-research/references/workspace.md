@@ -23,6 +23,8 @@ All file work goes through one Python script, `ta.py`, in this skill's `scripts/
 | `ta client <base> "<name>" [--create]` | Find a client (ignores accents and case): their profile and a summary of every past trip. `--create` makes the client folder and profile |
 | `ta quote <quote.json> [--providers <xlsx>]` | Price a quote: totals, per person, payment schedule, **internal** commission estimate, warnings, and rows ready for `update-trip` |
 | `ta quote-pdf <quote.json> <out.pdf> [--plan plan.json] [--palette …]` | Client quote PDF: itinerary, prices, payments, conditions, plus Patty's park plan with `--plan` |
+| `ta lessons <agency folder or Lessons.xlsx> --skill <your skill>` | What the agent taught you: active lessons for your skill plus the ones for all skills, newest first (see **Learning from the agent's feedback**) |
+| `ta learn <agency folder or Lessons.xlsx> '<json>'` | Save one lesson or a list (`skill`, `topic`, `lesson`, `why`, `source`); `"active": "no"` retires one |
 | `ta dashboard <agency folder or .xlsx files…> [--out file.html]` | The agent's **internal** interactive dashboard (one HTML file): next dates and pending tasks per client and for the agent, plus what needs attention as JSON (dashboard skill) |
 
 Read **PDFs** (vouchers, confirmations, rate sheets, passports) and images (screenshots of WhatsApp chats or tickets) with your own file-reading ability.
@@ -52,6 +54,7 @@ Read **PDFs** (vouchers, confirmations, rate sheets, passports) and images (scre
 │       ├── 1 - Intake … 8 - Photos & Reviews
 ├── Commissions|Comisiones/Providers & Commissions.xlsx
 ├── My Tasks.xlsx | Mis Tareas.xlsx                    ← the agent's own to-dos (dashboard skill)
+├── Lessons Learned.xlsx | Aprendizajes.xlsx            ← what the agent taught the assistant (every skill reads it)
 ├── Dashboard.html | Tablero.html                      ← built by `ta dashboard`, open in a browser
 ├── Marketing/
 └── Destinations|Destinos/
@@ -99,6 +102,7 @@ Agent-facing text defaults to the agent's own form. Use neutral Spanish when you
 | Quote | `Quote - <Client> - v<N>.pdf` | `Cotización - <Cliente> - v<N>.pdf` |
 | Client profile | `Client Profile.md` (in the client folder) | `Perfil del Cliente.md` |
 | Agent's tasks | `My Tasks.xlsx` (agency folder) | `Mis Tareas.xlsx` |
+| Lessons | `Lessons Learned.xlsx` (agency folder) | `Aprendizajes.xlsx` |
 | Dashboard | `Dashboard.html` (agency folder) | `Tablero.html` |
 
 **Travel-trade glossary.** Use the terms agents use, not literal translations:
@@ -145,6 +149,41 @@ Agent-facing text defaults to the agent's own form. Use neutral Spanish when you
 4. Never leave the markdown draft in the agency folder or the outputs folder.
 5. Status markers ✅ 🔴 🟡 ⚪ render correctly in both the Word document and the PDF.
 
+## Learning from the agent's feedback
+
+Every skill gets better with the agent who uses it. What the agent teaches you goes in the **Lessons** workbook (`Lessons Learned.xlsx` / `Aprendizajes.xlsx`, in the agency folder). Each row is one lesson for one skill (`skill`: `minnie-ai`, `fiona-ai`, `park-itinerary`, `fta`… or `all`). The agent can read, edit or switch off any row in Excel.
+
+**Before you start** a task, run `ta lessons "<agency folder>" --skill <your skill name>`. In chat mode, ask for the Lessons workbook along with the other files, and pass its path instead. Treat each lesson as a standing instruction from the agent. Lessons replace this skill's defaults: if a lesson says "Value resorts first", do that even where the skill suggests otherwise. When a lesson changes what you do, say so in a few words, e.g. "(Value resorts first, as you asked.)". A lesson never overrides the **rules**: never invent a price, never get around height limits or accessibility programs, and never show commission or net rates to a client. If following a lesson would break a rule, tell the agent and follow the rule.
+
+**What's a lesson.** A lesson is a lasting preference or a correction about *how to work*, which will matter again on other trips. Examples:
+- "Offer Pop Century and Art of Animation as the Value options."
+- "Price Universal tickets from my wholesaler's rate sheet, not the official site."
+- "Don't offer the Dining Plan unless the client asks."
+- "Clients take the Moderate tier far more often than Deluxe."
+- "Shorter WhatsApp messages, no emojis."
+- "Patty: never plan Magic Kingdom on arrival day."
+
+**What's not a lesson:**
+- **Prices, hours, availability and rules.** They change, so research them every time.
+- **Choices that only apply to this trip.**
+- **Anything about one client** (their preferences, fears, the kids' heights). That goes in their **Client Profile**, never in Lessons.
+
+**When to learn.** Listen for these:
+- The agent **corrects** you or **rejects** a suggestion and says why.
+- The agent says "always", "never", "from now on" or "next time".
+- The agent changes the same thing in your output twice.
+- A quote's **outcome**: the client accepted or declined, and why.
+
+**How to save a lesson:**
+1. Write it as a short instruction in the workspace language. Make it general enough to reuse but no wider than what the agent meant. "Prefer Value resorts for families on a budget" is right; "always pick the cheapest hotel" goes too far.
+2. Pick the narrowest `skill` it applies to. Use `all` only for things like tone, currency format or how the agent works.
+3. If the agent said "always", "never" or "from now on", save it straight away and tell them in one line. Otherwise ask first, in one line: "📌 Save for next time (MinnieAI): *Don't offer the Dining Plan unless they ask*?" Ask at a natural pause, not in the middle of a question to the client, and at most once per correction.
+4. Save it with `ta learn "<agency folder>" '{"skill": "minnie-ai", "topic": "dining", "lesson": "…", "why": "…", "source": "Agent correction, Pérez quote"}'`. Topics are `hotels`, `tickets`, `line_skipping`, `dining`, `transfers`, `itinerary`, `pricing`, `providers`, `communication`, `process` and `other`.
+5. **Conflicts:** first check what's already saved. If the new lesson replaces an old one, retire the old one in the same call with `{"skill": …, "lesson": "<old text exactly>", "active": "no"}`, and tell the agent. Don't save a near-duplicate. Reword the existing lesson instead: save the new text and retire the old.
+6. In chat mode, give the agent the updated Lessons workbook to download.
+
+If `ta lessons` returns more than 40 lessons, offer to tidy them up: merge the ones that overlap and retire the ones that are out of date.
+
 ## Privacy
 
-Trip Sheets and `5 - Documents (private)` contain personal data. Store only the **last 4 digits** of a passport number. Never put commissions or net rates in a client-facing file.
+Trip Sheets and `5 - Documents (private)` contain personal data. Store only the **last 4 digits** of a passport number. Never put commissions or net rates in a client-facing file. Lessons are agency-wide, so never write client names, health details or other personal data in them.

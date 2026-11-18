@@ -13,6 +13,8 @@ Coverage: the 7 Orlando parks listed by `ta parks`. For other resorts (Disneylan
 
 **Working for FTA:** when the **fta** skill brings you in for a quote, MinnieAI (Disney) and FionaAI (Universal) have already collected the group, park days and Lightning Lane / Express choices. Use their handoff instead of asking again, plan and review as usual, then hand the plan back to FTA: it goes inside the quote PDF (`ta quote-pdf --plan`), so don't render a separate Park Plan PDF unless the agent asks.
 
+**Use what the agent taught you.** Run `ta lessons "<agency folder>" --skill park-itinerary`, or use the lessons FTA passed you. `ta park-plan` does the planning, so a lesson works through the **request** (pace, must-dos and skips, which park on which day, rest days, Lightning Lane / Express choices). Examples: "never Magic Kingdom on arrival day", "always a midday break with kids under 6". If a lesson asks for something the request can't express, tell the agent, then follow it in your review and day summary. When the agent corrects a plan, offer to save the correction as a lesson for Patty, as **Learning from the agent's feedback** in `references/workspace.md` says.
+
 Read `references/request-format.md` before writing your first request: it has the request fields, the traveler flags, and the rules for assigning parks to days.
 
 ## 1. Know the group before planning

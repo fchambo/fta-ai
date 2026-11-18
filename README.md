@@ -4,7 +4,7 @@ Claude Code plugin marketplace with **travel-agent**, a toolkit for freelance tr
 
 Its front door is **FTA**, the Freelance Travel AI Agent. It takes a client's request, recalls the client's past trips, hands Disney World to **MinnieAI** and Universal Orlando to **FionaAI**, and turns their research plus Patty's park plan into a priced client quote.
 
-It covers social media content, destination research, client questionnaires, trip folders with an Excel Trip Sheet, trip and payment summaries, an interactive dashboard of upcoming dates and pending tasks for every client and for the agent, provider commission tracking, and **Patty**, a Disney World / Universal Orlando park planner that delivers a client PDF with route maps. The workspace can be in English or Spanish.
+It covers social media content, destination research, client questionnaires, trip folders with an Excel Trip Sheet, trip and payment summaries, skills that learn from the agent's corrections and preferences, an interactive dashboard of upcoming dates and pending tasks for every client and for the agent, provider commission tracking, and **Patty**, a Disney World / Universal Orlando park planner that delivers a client PDF with route maps. The workspace can be in English or Spanish.
 
 See [travel-agent/README.md](travel-agent/README.md) for what each skill does.
 
