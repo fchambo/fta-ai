@@ -7,6 +7,8 @@ description: Set up and maintain a travel agent's Providers & Commissions Excel 
 
 First read `references/workspace.md` in this skill's folder (`${CLAUDE_SKILL_DIR}/references/workspace.md`): it says how to work in **folder mode** (Claude Code, Cowork) and **chat mode** (Claude chat, where files come as attachments and go back as downloads). In this skill and that file, `ta` means `python3 "${CLAUDE_SKILL_DIR}/scripts/ta.py"`. If that path doesn't resolve, as can happen in Claude chat where the skill folder is copied into the sandbox, use `scripts/ta.py` inside the copied skill folder. Column meanings and rule types are in `references/schema.md`.
 
+**The agent's Knowledge Base.** Check it as **The agent's Knowledge Base** in `references/workspace.md` says, loading what fits commissions: commission and provider rules, invoicing, markups. The **Providers & Commissions** workbook stays the source for each provider's rates; if a Knowledge Base rule disagrees with it, ask the agent which is right.
+
 Everything lives in the **Providers & Commissions** workbook (`Commissions/` or `Comisiones/`). It has these sheets:
 - **Settings**: agency name, language, currency, VAT on commissions %, withholding %
 - **Providers**: one row per provider, with its default commission rule and how and when it pays

@@ -1,8 +1,8 @@
 {
   "name": "travel-agent",
   "displayName": "Travel Agent",
-  "version": "0.12.0",
-  "description": "Daily toolkit for freelance travel agents working in Excel, Word and PDF, in English and Spanish: FTA, the Freelance Travel AI Agent that takes a request from client lookup to a priced quote, with MinnieAI (Walt Disney World) and FionaAI (Universal Orlando) specialists and Patty, the park planner; plus social content, destination research, client questionnaires, trip folders and Trip Sheets, voucher lookup, trip summaries, an interactive dashboard of dates and pending tasks, and commission tracking. / Kit diario para agentes de viajes freelance en Excel, Word y PDF, en inglés y español.",
+  "version": "0.13.0",
+  "description": "Daily toolkit for freelance travel agents working in Excel, Word and PDF, in English and Spanish: FTA, the Freelance Travel AI Agent that takes a request from client lookup to a priced quote, with MinnieAI (Walt Disney World) and FionaAI (Universal Orlando) specialists and Patty, the park planner; plus social content, destination research, client questionnaires, trip folders and Trip Sheets, voucher lookup, your own Knowledge Base of rules and policies tagged #DisneyPolicy, #Commissions…, trip summaries, an interactive dashboard of dates and pending tasks, and commission tracking. / Kit diario para agentes de viajes freelance en Excel, Word y PDF, en inglés y español.",
   "author": {
     "name": "fchambo"
   },
@@ -18,6 +18,7 @@
     "theme-parks",
     "quotes",
     "orlando",
-    "dashboard"
+    "dashboard",
+    "knowledge-base"
   ]
 }

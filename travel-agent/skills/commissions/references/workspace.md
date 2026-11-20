@@ -19,6 +19,8 @@ All file work goes through one Python script, `ta.py`, in this skill's `scripts/
 | `ta xlsx '<json>' <out.xlsx>` | Generic tables → Excel file (`[{name, columns, rows}]`) |
 | `ta read-doc <file.docx/.xlsx>` | Extract the text of a Word or Excel file |
 | `ta vouchers <agency folder, trip folder or Trip Sheet> [--client "<name>"] [--query "<words>"] [--active]` | Vouchers saved in each trip's `4 - Bookings & Vouchers` folder, linked to their bookings, plus bookings with no voucher (vouchers skill) |
+| `ta kb <agency folder or files> [--tag <tag>…] [--query "<words>"] [--all]` | The agent's **Knowledge Base**: files and the tags in use; with `--tag`, `--query` or `--all`, the matching files' text (see **The agent's Knowledge Base**) |
+| `ta kb-note <agency folder> --tags <Tag> --add "<text>"` · `--doc "<file>" --replace "<old>" --with "<new>"` · `--remove "<old>"` | Add, change or remove a rule in a Knowledge Base Word file, **only when the agent asks** (knowledge-base skill) |
 | `ta open <file>…` | Open files in the agent's default app (Claude Code on their own computer only) |
 | `ta parks` · `park-info <park> [--party …]` | Theme parks with planning data, and who can ride what (park-itinerary skill only) |
 | `ta park-plan <request.json> [--out plan.json]` · `park-pdf <plan.json> <out.pdf>` | Plan park days, and render the client PDF with route maps (park-itinerary skill only) |
@@ -43,7 +45,7 @@ Read **PDFs** (vouchers, confirmations, rate sheets, passports) and images (scre
 
 ## Workspace layout
 
-`init` creates the folders and workbooks below (names follow the workspace language, English or Spanish). It writes the language to a hidden `.travel-agent.json`, and `ta` finds that file automatically from any path inside the workspace. A workbook's own sheet names tell `ta` its language, so a single uploaded file works without the workspace.
+`init` creates the folders and workbooks below, named in the workspace language (English or Spanish). Running it again on an existing workspace only adds what's missing, such as the Knowledge Base folder. It writes the language to a hidden `.travel-agent.json`, and `ta` finds that file automatically from any path inside the workspace. A workbook's own sheet names tell `ta` its language, so a single uploaded file works without the workspace.
 
 ```
 <agency folder>/
@@ -55,6 +57,7 @@ Read **PDFs** (vouchers, confirmations, rate sheets, passports) and images (scre
 ├── Commissions|Comisiones/Providers & Commissions.xlsx
 ├── My Tasks.xlsx | Mis Tareas.xlsx                    ← the agent's own to-dos (dashboard skill)
 ├── Dashboard.html | Tablero.html                      ← built by `ta dashboard`, open in a browser
+├── Knowledge Base|Base de Conocimiento/            ← the agent's own rules and policies, tagged #DisneyPolicy… (every skill reads it)
 ├── Marketing/
 └── Destinations|Destinos/
 ```
@@ -102,6 +105,7 @@ Agent-facing text defaults to the agent's own form. Use neutral Spanish when you
 | Client profile | `Client Profile.md` (in the client folder) | `Perfil del Cliente.md` |
 | Agent's tasks | `My Tasks.xlsx` (agency folder) | `Mis Tareas.xlsx` |
 | Dashboard | `Dashboard.html` (agency folder) | `Tablero.html` |
+| Knowledge Base folder | `Knowledge Base` (agency folder) | `Base de Conocimiento` |
 
 **Travel-trade glossary.** Use the terms agents use, not literal translations:
 | English | Spanish (LatAm) | Notes |
@@ -128,6 +132,23 @@ Agent-facing text defaults to the agent's own form. Use neutral Spanish when you
 | rope drop (be there at opening) | llegar a la apertura (*rope drop*) | |
 | height requirement | altura mínima | |
 
+## The agent's Knowledge Base
+
+Every agent works their own way. Their rules, policies and preferences live in the **Knowledge Base** folder (`Base de Conocimiento`) in the agency folder: Word files (and PDFs) the agent writes, with **hashtags** saying what each one covers, such as `#DisneyPolicy`, `#Commissions`, `#Payments` or `#Hotels`. A tag can go anywhere in the file or in its file name. The tags are the agent's own: any word works, and case, accents and dashes don't matter (`#Comisiones` is `#comisiones`).
+
+**Before you start a task:**
+
+1. Run `ta kb "<agency folder>"`. It lists every file with its tags, and every tag in use. In chat mode, ask the agent to attach the Knowledge Base files for this kind of task (or all of them, if there are few) along with the other files, and pass those files instead.
+2. Load what applies: `ta kb "<agency folder>" --tag DisneyPolicy --tag Payments` returns those files' full text. Pick tags by meaning, not exact spelling: for a Disney quote, `#DisneyPolicy`, `#Disney`, `#Hotels`, `#Payments`, `#Commissions` or `#Cotizaciones` may all apply. If the result says the Knowledge Base is small, load all of it with `--all`. Find untagged files with `--query "<words>"`. A file marked `read_yourself` is a PDF whose text `ta` couldn't extract: read it with your own file reading.
+3. Treat what you load as the agent's standing instructions. They take priority over this skill's defaults: if their `#DisneyPolicy` says the deposit is 25%, use 25%. When a rule changes what you do, say so in a few words, e.g. "(25% deposit, per your #DisneyPolicy.)". A rule never overrides the **hard rules**: never invent a price, never get around height limits or accessibility programs, and never show commission or net rates to a client. If following a rule would break one of these, tell the agent and follow the hard rule.
+4. If two files disagree, or it's unclear whether a rule covers this case, ask the agent. Don't guess.
+
+Check the Knowledge Base once per task, and skip files whose tags clearly don't fit (a `#SocialMedia` file isn't needed for a commission report). If there's no Knowledge Base yet, carry on with the skill's defaults; `ta init` creates the folder in an existing workspace.
+
+**It's internal.** Use a policy in client-facing text only when it's meant for clients (cancellation terms, the payment schedule), and write it for the client. Rules about commissions and net rates never reach a client.
+
+**Writing to it** happens only when the agent asks ("add to my #DisneyPolicy that…", "save this as a rule", "change the deposit in my policies to 30%"). Follow the **knowledge-base** skill. Never save anything on your own initiative. Facts about one client go in their **Client Profile**, not the Knowledge Base.
+
 ## Updating workbooks
 
 - JSON keys are section names: `trip` (object), plus `travelers`, `bookings`, `payments` and `deadlines` (lists of objects). For the providers workbook they're `settings`, `providers`, `products` and `incentives`. Get the field keys from `read-trip`/`read-providers` output.
@@ -149,4 +170,4 @@ Agent-facing text defaults to the agent's own form. Use neutral Spanish when you
 
 ## Privacy
 
-Trip Sheets and `5 - Documents (private)` contain personal data. Store only the **last 4 digits** of a passport number. Never put commissions or net rates in a client-facing file.
+Trip Sheets and `5 - Documents (private)` contain personal data. Store only the **last 4 digits** of a passport number. Never put commissions or net rates in a client-facing file. The Knowledge Base is agency-wide: never write client names, health details or other personal data in it.

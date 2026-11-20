@@ -359,6 +359,93 @@ def cmd_open(args):
     out({"opened": [vouchers.open_file(p) for p in args.files]})
 
 
+def _kb_sources(paths):
+    """(Knowledge Base folder or None, paths to read). An agency folder means its Knowledge Base folder."""
+    from . import kb
+    sources, kb_dir = [], None
+    for path in paths:
+        base, _ = find_config(path)
+        if os.path.isdir(path) and base and os.path.abspath(path) == base:
+            found = kb.folder_for(base)
+            if found:
+                kb_dir = kb_dir or found
+                sources.append(found)
+        else:
+            if os.path.isdir(path):
+                kb_dir = kb_dir or os.path.abspath(path)
+            sources.append(path)
+    return kb_dir, sources
+
+
+def cmd_kb(args):
+    from . import kb
+    kb_dir, sources = _kb_sources(args.paths or ["."])
+    if not sources:
+        out({"folder": None, "missing": True, "files": [], "tags": [],
+             "hint": "No Knowledge Base folder yet. 'ta init' creates it; in chat mode ask the agent to attach their Knowledge Base files."})
+        return
+    entries = kb.index(sources, root=kb_dir)
+    total = sum(e["chars"] for e in entries)
+    if args.tag or args.query or args.all:
+        picked = entries if args.all else kb.select(entries, args.tag or [], args.query)
+        out({"folder": kb_dir, "matched": [kb.public(e, True) for e in picked],
+             "other_tags": [t["tag"] for t in kb.summary(entries)
+                            if kb.tag_key(t["tag"]) not in {kb.tag_key(x) for e in picked for x in e["tags"]}]})
+        return
+    result = {"folder": kb_dir, "files": [kb.public(e, False) for e in entries], "tags": kb.summary(entries),
+              "untagged": [e["file"] for e in entries if not e["tags"]], "total_chars": total}
+    if not entries:
+        result["hint"] = "The Knowledge Base is empty."
+    elif total <= kb.SMALL_KB_CHARS:
+        result["hint"] = "Small Knowledge Base: read all of it with --all."
+    out(result)
+
+
+def _camel_words(tag):
+    return re.sub(r"(?<=[a-z0-9])(?=[A-Z])", " ", tag.lstrip("#")).replace("-", " ").replace("_", " ").strip()
+
+
+def cmd_kb_note(args):
+    from . import kb
+    if (args.replace is None) != (args.with_text is None):
+        sys.exit("--replace needs --with (the new text), and the other way round")
+    actions = sum(x is not None for x in (args.add, args.replace, args.remove))
+    if actions > 1 or (actions == 0 and not (args.tags and args.doc)):
+        sys.exit("Pass one of --add, --replace … --with, or --remove (or --doc with --tags to just tag a file)")
+    target = None
+    if os.path.isfile(args.path):
+        target, kb_dir = args.path, os.path.dirname(os.path.abspath(args.path))
+    else:
+        base, cfg = find_config(args.path)
+        if base and os.path.abspath(args.path) == base:
+            kb_dir = kb.folder_for(base) or os.path.join(base, folder("knowledge", lang_of(cfg.get("lang"))))
+        else:
+            kb_dir = os.path.abspath(args.path)
+        existing = kb.index([kb_dir], root=kb_dir) if os.path.isdir(kb_dir) else []
+        if args.doc:
+            wanted = kb._plain(os.path.splitext(args.doc)[0])
+            same = [e for e in existing if kb._plain(os.path.splitext(os.path.basename(e["file"]))[0]) == wanted]
+            target = same[0]["path"] if same else os.path.join(kb_dir, safe_name(os.path.splitext(args.doc)[0]) + ".docx")
+        elif args.tags:
+            having = [e for e in existing if kb.tag_key(args.tags[0]) in e["_keys"]]  # the first tag picks the file
+            if len(having) > 1:
+                out({"status": "ambiguous", "candidates": [e["file"] for e in having],
+                     "hint": "Several files have this tag: ask the agent which one, then pass --doc"})
+                return
+            target = having[0]["path"] if having else os.path.join(kb_dir, safe_name(_camel_words(args.tags[0])) + ".docx")
+        else:
+            sys.exit("Say which file with --doc, or give --tags so the file with that tag is used")
+    if not target.lower().endswith(kb.WRITABLE):
+        sys.exit(f"Only Word files can be edited ({os.path.basename(target)}): ask the agent to change it, or add the rule to a Word file")
+    try:
+        result = kb.write(target, title=args.doc and os.path.splitext(args.doc)[0], add=args.add if args.replace is None else args.with_text,
+                          tags=args.tags or [], replace=args.replace, remove=args.remove)
+    except (ValueError, PermissionError) as e:
+        sys.exit(str(e))
+    entry = kb.read(target, kb_dir)
+    out({"status": "ok", "file": target, **result, "tags": entry["tags"]})
+
+
 def cmd_dashboard(args):
     from . import dashboard
     paths = args.paths or ["."]
@@ -457,6 +544,21 @@ def main():
     s.set_defaults(fn=cmd_vouchers)
     s = sub.add_parser("open", help="Open files with the computer's default app (folder mode on the agent's own computer)")
     s.add_argument("files", nargs="+"); s.set_defaults(fn=cmd_open)
+
+    s = sub.add_parser("kb", help="The agent's Knowledge Base: tags and files; with --tag/--query/--all, the matching files' text")
+    s.add_argument("paths", nargs="*", help="Agency folder, the Knowledge Base folder, or attached files")
+    s.add_argument("--tag", action="append", help="A tag to load, e.g. DisneyPolicy (repeat for more; case and accents ignored)")
+    s.add_argument("--query", help="Words that must all appear in the file")
+    s.add_argument("--all", action="store_true", help="Every file's text")
+    s.set_defaults(fn=cmd_kb)
+    s = sub.add_parser("kb-note", help="Add, change or remove a rule in a Knowledge Base Word file (only when the agent asks)")
+    s.add_argument("path", help="Agency folder, the Knowledge Base folder, or the .docx itself")
+    s.add_argument("--doc", help="File name (new or existing); default: the file that has --tags")
+    s.add_argument("--tags", nargs="+", help="Tags for the new text, e.g. DisneyPolicy Payments. Without --doc, the file with the first tag")
+    s.add_argument("--add", help="Text to add at the end (one paragraph per line; '- ' for bullets)")
+    s.add_argument("--replace", help="Exact text of the paragraph to change"); s.add_argument("--with", dest="with_text")
+    s.add_argument("--remove", help="Exact text of the paragraph to delete")
+    s.set_defaults(fn=cmd_kb_note)
 
     s = sub.add_parser("dashboard", help="Interactive HTML dashboard: next dates and pending tasks for every client and the agent")
     s.add_argument("paths", nargs="*", help="Agency folder, or Trip Sheets / My Tasks / Providers workbooks")

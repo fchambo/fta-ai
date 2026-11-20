@@ -7,6 +7,8 @@ description: Summarize a client's trip from its Excel Trip Sheet, covering trave
 
 First read `references/workspace.md` in this skill's folder (`${CLAUDE_SKILL_DIR}/references/workspace.md`): it says how to work in **folder mode** (Claude Code, Cowork) and **chat mode** (Claude chat, where files come as attachments and go back as downloads). In this skill and that file, `ta` means `python3 "${CLAUDE_SKILL_DIR}/scripts/ta.py"`. If that path doesn't resolve, as can happen in Claude chat where the skill folder is copied into the sandbox, use `scripts/ta.py` inside the copied skill folder.
 
+**The agent's Knowledge Base.** Check it as **The agent's Knowledge Base** in `references/workspace.md` says, loading what fits summaries: payments and deposits, cancellations, reminders, and how they present things to clients.
+
 The dates are computed by `ta timeline`, so overdue and upcoming items are always correct. You write the words, and `ta docx` produces the files.
 
 ## One trip

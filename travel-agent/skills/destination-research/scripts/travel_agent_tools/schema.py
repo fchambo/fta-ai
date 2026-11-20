@@ -198,6 +198,7 @@ ROOT_FOLDERS = {
     "commissions": ("Commissions", "Comisiones"),
     "marketing": ("Marketing", "Marketing"),
     "destinations": ("Destinations", "Destinos"),
+    "knowledge": ("Knowledge Base", "Base de Conocimiento"),
 }
 
 TRIP_FOLDERS = [

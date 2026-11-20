@@ -7,6 +7,8 @@ description: Find and open the vouchers and confirmations saved in a client's tr
 
 First read `references/workspace.md` in this skill's folder (`${CLAUDE_SKILL_DIR}/references/workspace.md`): it says how to work in **folder mode** (Claude Code, Cowork) and **chat mode** (Claude chat, where files come as attachments and go back as downloads). In this skill and that file, `ta` means `python3 "${CLAUDE_SKILL_DIR}/scripts/ta.py"`. If that path doesn't resolve, as can happen in Claude chat where the skill folder is copied into the sandbox, use `scripts/ta.py` inside the copied skill folder.
 
+**The agent's Knowledge Base.** Check it as **The agent's Knowledge Base** in `references/workspace.md` says, loading what fits vouchers: how they name and file them, and what they send clients.
+
 Every trip keeps its vouchers in its `4 - Bookings & Vouchers` folder (`4 - Reservas y Vouchers`), and every booking is a row in the Trip Sheet's **Bookings** tab. This skill does two things with them: **find and open** vouchers already saved, and **load** new ones into the Trip Sheet. Creating the client, the trip and its folders is the **trip-scaffold** skill's job: if the trip doesn't exist yet, set it up there first.
 
 ## Find and open vouchers

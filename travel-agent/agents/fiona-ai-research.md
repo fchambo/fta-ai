@@ -23,4 +23,6 @@ Reply with:
 - **Park days**: date, park, hours, Early Park Admission, closures and events.
 - **Watch-outs**: anything that changes the plan (a must-do closed, an HHN night, Express sold out, Premier hotel Express not valid on a date).
 
+**The agent's rules.** If the prompt includes rules from the agent's Knowledge Base (preferred wholesalers, sources to check first, hotel tiers to include), follow them. Research every price anyway, and say where each one came from. A rule is never a reason to guess or skip a check.
+
 Be brief. No marketing language.
