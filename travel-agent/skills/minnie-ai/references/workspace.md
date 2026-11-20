@@ -18,6 +18,8 @@ All file work goes through one Python script, `ta.py`, in this skill's `scripts/
 | `ta docx <draft.md> <out.docx> [--pdf] [--footer "…"] [--title "…"]` | Your markdown → styled Word document (and PDF) |
 | `ta xlsx '<json>' <out.xlsx>` | Generic tables → Excel file (`[{name, columns, rows}]`) |
 | `ta read-doc <file.docx/.xlsx>` | Extract the text of a Word or Excel file |
+| `ta vouchers <agency folder, trip folder or Trip Sheet> [--client "<name>"] [--query "<words>"] [--active]` | Vouchers saved in each trip's `4 - Bookings & Vouchers` folder, linked to their bookings, plus bookings with no voucher (vouchers skill) |
+| `ta open <file>…` | Open files in the agent's default app (Claude Code on their own computer only) |
 | `ta parks` · `park-info <park> [--party …]` | Theme parks with planning data, and who can ride what (park-itinerary skill only) |
 | `ta park-plan <request.json> [--out plan.json]` · `park-pdf <plan.json> <out.pdf>` | Plan park days, and render the client PDF with route maps (park-itinerary skill only) |
 | `ta client <base> "<name>" [--create]` | Find a client (ignores accents and case): their profile and a summary of every past trip. `--create` makes the client folder and profile |

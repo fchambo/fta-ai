@@ -399,6 +399,43 @@ def cmd_learn(args):
          "active": sum(1 for r in data["lessons"] if r.get("active") != "no")})
 
 
+def cmd_vouchers(args):
+    from . import vouchers
+    if os.path.isfile(args.path):
+        sheets = [args.path]
+    elif any(workbooks.is_layout(p, schema.TRIP_WORKBOOK) for p in glob.glob(os.path.join(args.path, "*.xlsx"))):
+        sheets = [p for p in glob.glob(os.path.join(args.path, "*.xlsx")) if workbooks.is_layout(p, schema.TRIP_WORKBOOK)]
+    else:
+        sheets = _trip_sheets(args.path)
+        if args.client:
+            from . import clients
+            matches = clients.find(find_config(args.path)[0] or os.path.abspath(args.path), args.client, sheets)
+            best = [m for m in matches if m["score"] == matches[0]["score"]] if matches else []
+            if not best or best[0]["score"] < 2:
+                out({"status": "client_not_found", "candidates": [m["client"] for m in matches[:8]]})
+                return
+            if len(best) > 1:
+                out({"status": "ambiguous", "candidates": [m["client"] for m in best]})
+                return
+            sheets = best[0]["trip_paths"]
+    trips = []
+    for path in sheets:
+        result = vouchers.trip(path, args.query)
+        if args.active and result["status"] in ("closed", "cancelled"):
+            continue
+        if args.query and not (result["files"] or result["bookings"]):
+            continue
+        trips.append(result)
+    trips.sort(key=lambda t: str(t.get("start_date") or ""), reverse=True)
+    out({"status": "ok" if trips else "nothing_found", "query": args.query, "trips": trips,
+         "files_found": sum(len(t["files"]) for t in trips)})
+
+
+def cmd_open(args):
+    from . import vouchers
+    out({"opened": [vouchers.open_file(p) for p in args.files]})
+
+
 def cmd_dashboard(args):
     from . import dashboard
     paths = args.paths or ["."]
@@ -496,6 +533,15 @@ def main():
     s.add_argument("path", help="Agency folder or the Lessons workbook"); s.add_argument("lessons", help="JSON object, list, or file")
     s.add_argument("--today")
     s.set_defaults(fn=cmd_learn)
+
+    s = sub.add_parser("vouchers", help="Vouchers and confirmations saved in trips, linked to their Trip Sheet bookings")
+    s.add_argument("path", help="Agency folder, a trip folder, or a Trip Sheet")
+    s.add_argument("--client", help="Only this client's trips (accent/case-insensitive)")
+    s.add_argument("--query", help="Words to match in file names and bookings (provider, product, confirmation #, type)")
+    s.add_argument("--active", action="store_true", help="Skip closed and cancelled trips")
+    s.set_defaults(fn=cmd_vouchers)
+    s = sub.add_parser("open", help="Open files with the computer's default app (folder mode on the agent's own computer)")
+    s.add_argument("files", nargs="+"); s.set_defaults(fn=cmd_open)
 
     s = sub.add_parser("dashboard", help="Interactive HTML dashboard: next dates and pending tasks for every client and the agent")
     s.add_argument("paths", nargs="*", help="Agency folder, or Trip Sheets / My Tasks / Providers workbooks")
