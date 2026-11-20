@@ -9,8 +9,6 @@ First read `references/workspace.md` in this skill's folder (`${CLAUDE_SKILL_DIR
 
 Every trip keeps its vouchers in its `4 - Bookings & Vouchers` folder (`4 - Reservas y Vouchers`), and every booking is a row in the Trip Sheet's **Bookings** tab. This skill does two things with them: **find and open** vouchers already saved, and **load** new ones into the Trip Sheet. Creating the client, the trip and its folders is the **trip-scaffold** skill's job: if the trip doesn't exist yet, set it up there first.
 
-Run `ta lessons "<agency folder>" --skill vouchers` before you start and follow what it returns (see **Learning from the agent's feedback** in `workspace.md`).
-
 ## Find and open vouchers
 
 1. **Work out what the agent wants:** the client, and which voucher (a provider, a product such as "Pop Century", a type such as hotel or flight, or a confirmation number). "All the Pérez vouchers" is fine too.

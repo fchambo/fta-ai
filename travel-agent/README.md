@@ -59,12 +59,6 @@ Travel request ─▶ FTA ─▶ new client? ── yes ─▶ client folder + C
 
 Prices are never built in. MinnieAI and FionaAI look them up for the client's dates (or use the agent's provider rates) and note the source. Anything unconfirmed is flagged for the agent to verify before sending.
 
-## It learns from you
-
-When you correct MinnieAI, FionaAI, Patty, FTA or any other skill, or say "always…", "never…" or "from now on…", the assistant saves a **lesson**. It goes in **Lessons Learned.xlsx** (`Aprendizajes.xlsx`) in your agency folder. Each skill reads its lessons before it starts, so next time it already works your way. Examples: the hotels you like to show first, your wholesaler's rates before the official site, extras you never offer, never Magic Kingdom on arrival day. At the end of each quote FTA asks what to do differently, and it learns from why clients accept or decline.
-
-The workbook is yours: open it in Excel to edit a lesson or set **Active** to *No*. Facts about one client go in that client's **Client Profile** instead. Prices are never saved as lessons, because they change: they're researched fresh every time.
-
 ## Install
 
 **Claude chat or Cowork** (web or desktop app): open **Customize → Plugins → Add**, then either:
