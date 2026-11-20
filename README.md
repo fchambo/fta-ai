@@ -1,4 +1,4 @@
-# fta-claude-plugin
+# Freelance Travel Agent with AI
 
 Claude Code plugin marketplace with **travel-agent**, a toolkit for freelance travel agents who work in Excel, Word and PDF.
 
