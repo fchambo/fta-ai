@@ -1,6 +1,6 @@
 ---
 name: trip-scaffold
-description: Set up a travel agency workspace or create the folders and Excel Trip Sheet for a new client trip, and load booking vouchers or confirmations (PDF, Word, email, screenshots) into that Trip Sheet. Use when a travel agent mentions a new client, inquiry or booking, asks to set up, organize or create folders for a trip, or shares vouchers or confirmations to record. También en español: nuevo cliente, nueva consulta o reserva, armar o configurar mi agencia, crear carpetas o la ficha del viaje, cargar vouchers o confirmaciones.
+description: Set up a travel agency workspace or create the folders and Excel Trip Sheet for a new client trip. Use when a travel agent mentions a new client or inquiry, or asks to set up, organize or create folders for a trip. For finding, opening or loading vouchers and confirmations, use the vouchers skill. También en español: nuevo cliente, nueva consulta, armar o configurar mi agencia, crear carpetas o la ficha del viaje.
 ---
 
 # Trip scaffold
@@ -32,12 +32,6 @@ Then run `ta init …` and tell them what was created. If they gave brand colors
 5. In chat mode, give them the Trip Sheet to download and tell them where to save it: `Clients/<Client>/<YYYY-MM Destination>/`.
 6. Suggest the next step, which is usually the **client-intake** questionnaire.
 
-## Recording vouchers and confirmations
+## Vouchers and confirmations
 
-When the agent shares booking documents (PDF vouchers, airline e-tickets, hotel confirmations, provider invoices, forwarded emails, screenshots):
-
-1. Read each file: use the Read tool for PDFs and images, and `ta read-doc` for .docx and .xlsx.
-2. Extract the bookings: type, provider, product, confirmation number, dates, passengers, nights, client price, taxes, net, currency and free-cancellation deadline. Also extract **payments** (deposit and balance due dates) and any deadlines (final names, ticketing time limit).
-3. Match `provider` to an existing ID in the Providers workbook. If none fits, ask whether to add the provider.
-4. Before writing, show the agent a short table of what you extracted and ask them to confirm amounts and dates. Mistakes here end up in their summaries and commissions.
-5. Run `update-trip`. In folder mode, save the original files into `4 - Bookings & Vouchers` if they aren't already there. In chat mode, return the updated Trip Sheet for download and remind the agent to keep the vouchers in that folder.
+Finding, opening and loading vouchers and confirmations is the **vouchers** skill's job (`/recuperar-vouchers`). If the agent shares booking documents while you're creating a trip, finish creating it, then load them as the **vouchers** skill says.

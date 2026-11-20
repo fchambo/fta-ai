@@ -13,7 +13,8 @@ In ChatGPT, attach the current Trip Sheet, vouchers, contracts, or other source 
 | `fta` (**FTA AI Agent**) | From a new request to a quote: finds the client or creates their workspace and **Client Profile**, recalls their past trips, routes to **MinnieAI** (Disney) and/or **FionaAI** (Universal), builds the itinerary with **Patty**, and makes a client **quote PDF** (itinerary, prices, payment schedule, park maps) plus an internal commission estimate | "New request from the Pérez family: 6 days in Orlando in December, Disney and Universal" |
 | `minnie-ai` (**MinnieAI**) | Walt Disney World specialist: guides you through tickets, Disney resorts, Lightning Lane, parties, dining and transfers, with current prices and sources | "MinnieAI, Disney options for 2 adults and 2 kids, Dec 13–16" |
 | `fiona-ai` (**FionaAI**) | Universal Orlando specialist: tickets (Park-to-Park, Epic Universe), hotels with Express, Universal Express, Volcano Bay and events | "FionaAI, is a Premier hotel cheaper than buying Express for 4?" |
-| `trip-scaffold` | Client/trip folders + an Excel **Trip Sheet**. Loads PDF vouchers and confirmations into it | "New client: María Pérez, Patagonia, Dec 2026" · "Load these vouchers" |
+| `trip-scaffold` | Client/trip folders + an Excel **Trip Sheet** | "New client: María Pérez, Patagonia, Dec 2026" |
+| `vouchers` | Finds and opens a trip's saved vouchers (by client, provider, product, type or confirmation #), flags bookings with no voucher, and loads new vouchers and confirmations into the Trip Sheet | "Send me the Pérez hotel voucher" · "Load these vouchers" |
 | `client-intake` | Questionnaire tailored to the destination and trip type (Word/PDF or WhatsApp text). Client answers are loaded into the Trip Sheet | "What should I ask a family going to Japan in April?" |
 | `destination-research` | Sourced destination guide in Word, plus an optional client-ready PDF | "Research Albania for Argentine couples in September" |
 | `social-content` | Posts ready to paste, Word drafts, Excel content calendar | "Plan my November Instagram" |
@@ -28,7 +29,8 @@ Type `/` in Claude to pick a skill directly. Each skill also has a Spanish comma
 
 | Skill | Spanish command | Use it to |
 |---|---|---|
-| `trip-scaffold` | `/nuevo-viaje` | New client or trip, agency setup, load vouchers |
+| `trip-scaffold` | `/nuevo-viaje` | New client or trip, agency setup |
+| `vouchers` | `/recuperar-vouchers` | Find and open vouchers, see which are missing, load new ones |
 | `client-intake` | `/cuestionario-cliente` | Client questionnaire, or load the client's answers |
 | `destination-research` | `/investigar-destino` | Destination guide, comparisons, trending destinations |
 | `social-content` | `/contenido-redes` | Posts, reels, stories, content calendar |
