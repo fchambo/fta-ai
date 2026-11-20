@@ -10,8 +10,8 @@ import subprocess
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-REQUIREMENTS = ["openpyxl>=3.1,<4", "python-docx>=1.1,<2", "reportlab>=4,<5"]
-READY_MARKER = ".ta-ready-1"
+REQUIREMENTS = ["openpyxl>=3.1,<4", "python-docx>=1.1,<2", "reportlab>=4,<5", "pypdf>=4,<6"]
+READY_MARKER = ".ta-ready-2"
 
 
 def have_libraries():

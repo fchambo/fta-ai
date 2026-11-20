@@ -7,6 +7,8 @@ description: Build a tailored questionnaire for a travel client based on the des
 
 First read `references/workspace.md` in this skill's folder (`${CLAUDE_SKILL_DIR}/references/workspace.md`): it says how to work in **folder mode** (Claude Code, Cowork) and **chat mode** (Claude chat, where files come as attachments and go back as downloads). In this skill and that file, `ta` means `python3 "${CLAUDE_SKILL_DIR}/scripts/ta.py"`. If that path doesn't resolve, as can happen in Claude chat where the skill folder is copied into the sandbox, use `scripts/ta.py` inside the copied skill folder.
 
+**The agent's Knowledge Base.** Check it as **The agent's Knowledge Base** in `references/workspace.md` says, loading what fits intake: questions they always ask, how they talk to clients, and the payment or cancellation terms they want mentioned.
+
 Ask clients the questions that matter for *their* trip, and nothing more. A beach week in Cancún and a multi-country trip through Southeast Asia need very different questions.
 
 ## Mode A: Create the questionnaire
