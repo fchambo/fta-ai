@@ -111,13 +111,8 @@ def cmd_init(args):
     tasks_created = not os.path.exists(tasks)
     if tasks_created:
         workbooks.create(tasks, schema.TASKS_WORKBOOK, {}, lang)
-    lessons = _lessons_path(base, lang)
-    lessons_created = not os.path.exists(lessons)
-    if lessons_created:
-        workbooks.create(lessons, schema.LESSONS_WORKBOOK, {}, lang)
     out({"base": base, "lang": lang, "providers_workbook": providers, "providers_created": created,
          "tasks_workbook": tasks, "tasks_created": tasks_created,
-         "lessons_workbook": lessons, "lessons_created": lessons_created,
          "folders": [folder(k, lang) for k in schema.ROOT_FOLDERS]})
 
 
@@ -327,78 +322,6 @@ def cmd_quote_pdf(args):
                              palette=args.palette, color=args.color, lang=args.lang)})
 
 
-def _lessons_path(base, lang):
-    return os.path.join(base, schema.FILE_NAMES["lessons"][schema.LANGS.index(lang)])
-
-
-def _find_lessons(path):
-    """A Lessons workbook path, or the workspace's (which may not exist yet); None outside a workspace."""
-    if path.lower().endswith(".xlsx"):
-        return path
-    base, cfg = find_config(path)
-    if base is None:
-        return None
-    for lang in schema.LANGS:  # either name works, whatever the workspace language
-        candidate = _lessons_path(base, lang)
-        if os.path.exists(candidate):
-            return candidate
-    return _lessons_path(base, lang_of(cfg.get("lang")))
-
-
-MAX_LESSONS_HINT = 40
-
-
-def cmd_lessons(args):
-    path = _find_lessons(args.path)
-    if not path or not os.path.exists(path):
-        out({"file": path, "missing": True, "lessons": [],
-             "hint": "No Lessons workbook yet. 'ta learn' creates it in a workspace; in chat mode ask the agent to attach theirs."})
-        return
-    data = workbooks.read(path, schema.LESSONS_WORKBOOK)
-    rows = [dict(r, row=i) for i, r in enumerate(data["lessons"], start=2) if r.get("lesson")]
-    active = [r for r in rows if r.get("active") != "no"]
-    if args.skill:
-        active = [r for r in active if r.get("skill") in (args.skill, "all", None)]
-    if args.topic:
-        active = [r for r in active if r.get("topic") in (args.topic, None)]
-    active.sort(key=lambda r: str(r.get("learned_on") or ""), reverse=True)  # newest first,
-    active.sort(key=lambda r: r.get("skill") in ("all", None))                 # then this skill's own before "all"
-    result = {"file": path, "lang": data["_lang"], "count": len(active), "inactive": sum(1 for r in rows if r.get("active") == "no"),
-              "lessons": active}
-    if len(active) > MAX_LESSONS_HINT:
-        result["hint"] = "Many lessons: offer the agent to merge overlapping ones and retire outdated ones"
-    out(result)
-
-
-def cmd_learn(args):
-    path = _find_lessons(args.path)
-    if not path:
-        sys.exit("No travel-agent workspace here: pass the Lessons workbook (.xlsx) or run 'init' first.")
-    incoming = load_json_arg(args.lessons)
-    incoming = [incoming] if isinstance(incoming, dict) else incoming
-    today = today_arg(args).isoformat()
-    rows = []
-    for item in incoming:
-        if not item.get("lesson") or not item.get("skill"):
-            sys.exit("Each lesson needs 'skill' and 'lesson'")
-        item = {**item, "skill": schema.choice_code("skill", item["skill"])}  # labels -> codes, so rows match on update
-        if item["skill"] not in [c[0] for c in schema.CHOICES["skill"]]:
-            sys.exit(f"Unknown skill '{item['skill']}'. Valid: {', '.join(c[0] for c in schema.CHOICES['skill'])}")
-        if item.get("topic"):
-            item["topic"] = schema.choice_code("topic", item["topic"])
-        item["lesson"] = " ".join(str(item["lesson"]).split())
-        retiring = schema.choice_code("yesno", item.get("active")) == "no"
-        rows.append({**({} if retiring else {"learned_on": today, "active": "yes"}), **item})
-    created = not os.path.exists(path)
-    if created:
-        base, cfg = find_config(os.path.dirname(path) or ".")
-        lang = lang_of(cfg.get("lang")) if base else ("es" if os.path.basename(path) == schema.FILE_NAMES["lessons"][1] else "en")
-        workbooks.create(path, schema.LESSONS_WORKBOOK, {}, lang)
-    data = workbooks.update(path, schema.LESSONS_WORKBOOK, {"lessons": rows})
-    out({"file": path, "created": created, "saved": len(rows),
-         "active": sum(1 for r in data["lessons"] if r.get("active") != "no")})
-
-
 def cmd_vouchers(args):
     from . import vouchers
     if os.path.isfile(args.path):
@@ -474,7 +397,7 @@ def main():
     s.set_defaults(fn=cmd_find_trips)
 
     for name, layout in (("trip", schema.TRIP_WORKBOOK), ("providers", schema.PROVIDERS_WORKBOOK),
-                         ("tasks", schema.TASKS_WORKBOOK), ("lessons", schema.LESSONS_WORKBOOK)):
+                         ("tasks", schema.TASKS_WORKBOOK)):
         s = sub.add_parser(f"read-{name}"); s.add_argument("file"); s.set_defaults(fn=cmd_read(layout))
         s = sub.add_parser(f"update-{name}", help="Merge JSON changes ({section: {...} or [...]}) into the workbook")
         s.add_argument("file"); s.add_argument("changes", help="JSON string or path to a .json file")
@@ -525,14 +448,6 @@ def main():
     s.add_argument("--footer"); s.add_argument("--lang", choices=schema.LANGS)
     s.add_argument("--palette", help="Agency brand colors, main first"); s.add_argument("--color")
     s.set_defaults(fn=cmd_quote_pdf)
-
-    s = sub.add_parser("lessons", help="Active lessons the agent taught (for one skill with --skill), newest first")
-    s.add_argument("path", help="Agency folder or the Lessons workbook"); s.add_argument("--skill"); s.add_argument("--topic")
-    s.set_defaults(fn=cmd_lessons)
-    s = sub.add_parser("learn", help="Save lessons from the agent's feedback ({skill, topic, lesson, why, source}); active:'no' retires one")
-    s.add_argument("path", help="Agency folder or the Lessons workbook"); s.add_argument("lessons", help="JSON object, list, or file")
-    s.add_argument("--today")
-    s.set_defaults(fn=cmd_learn)
 
     s = sub.add_parser("vouchers", help="Vouchers and confirmations saved in trips, linked to their Trip Sheet bookings")
     s.add_argument("path", help="Agency folder, a trip folder, or a Trip Sheet")

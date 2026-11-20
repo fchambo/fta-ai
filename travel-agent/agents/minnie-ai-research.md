@@ -23,6 +23,4 @@ Reply with:
 - **Park days**: date, park, hours, Early Entry / Extended Evening, closures and events.
 - **Watch-outs**: anything that changes the plan (a must-do closed, a party night, a price jump on a date).
 
-**The agent's lessons.** If the prompt includes lessons from the agent (preferred wholesalers, sources to check first, hotel tiers to include), follow them. Research every price anyway, and say where each one came from. A lesson is never a reason to guess or skip a check.
-
 Be brief. No marketing language.

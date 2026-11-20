@@ -42,23 +42,6 @@ CHOICES = {
     "period": [("year", "Year", "Año"), ("quarter", "Quarter", "Trimestre")],
     "lang": [("en", "English", "Inglés"), ("es", "Spanish", "Español")],
     "priority": [("high", "High", "Alta"), ("normal", "Normal", "Normal"), ("low", "Low", "Baja")],
-    "skill": [("all", "All skills", "Todas"), ("fta", "FTA", "FTA"),
-              ("minnie-ai", "MinnieAI (Disney)", "MinnieAI (Disney)"), ("fiona-ai", "FionaAI (Universal)", "FionaAI (Universal)"),
-              ("park-itinerary", "Patty (park plans)", "Patty (parques)"),
-              ("destination-research", "Destination research", "Investigación de destinos"),
-              ("social-content", "Social content", "Contenido para redes"),
-              ("client-intake", "Client questionnaires", "Cuestionarios"),
-              ("trip-scaffold", "Trips", "Viajes"),
-              ("vouchers", "Vouchers", "Vouchers"),
-              ("trip-summary", "Trip summaries", "Resúmenes de viaje"),
-              ("commissions", "Commissions", "Comisiones"), ("dashboard", "Dashboard", "Tablero")],
-    "topic": [("hotels", "Hotels", "Hoteles"), ("tickets", "Tickets", "Entradas"),
-              ("line_skipping", "Lightning Lane / Express", "Lightning Lane / Express"),
-              ("dining", "Dining", "Comidas"), ("transfers", "Transfers & transport", "Traslados y transporte"),
-              ("itinerary", "Itinerary & pace", "Itinerario y ritmo"), ("pricing", "Prices & margins", "Precios y márgenes"),
-              ("providers", "Providers & sources", "Proveedores y fuentes"),
-              ("communication", "Tone & format", "Tono y formato"), ("process", "How I work", "Cómo trabajo"),
-              ("other", "Other", "Otro")],
 }
 
 # --- Trip Sheet workbook -----------------------------------------------------
@@ -208,22 +191,6 @@ TASKS_WORKBOOK = {
     "tasks": ("My Tasks", "Mis Tareas", TASKS, "table"),
 }
 
-# --- Lessons workbook (what the agent taught the assistant; every skill reads its own) ---
-
-LESSONS = [
-    ("skill", "For", "Para", "choice:skill"),
-    ("topic", "Topic", "Tema", "choice:topic"),
-    ("lesson", "What to do", "Qué hacer", "text"),
-    ("why", "Why / example", "Por qué / ejemplo", "text"),
-    ("source", "Learned from", "Aprendido de", "text"),
-    ("learned_on", "Date", "Fecha", "date"),
-    ("active", "Active", "Vigente", "choice:yesno"),
-]
-
-LESSONS_WORKBOOK = {
-    "lessons": ("Lessons", "Aprendizajes", LESSONS, "table"),
-}
-
 # --- Folder names -------------------------------------------------------------
 
 ROOT_FOLDERS = {
@@ -248,7 +215,6 @@ FILE_NAMES = {
     "trip_sheet": ("Trip Sheet", "Ficha del Viaje"),
     "providers": ("Providers & Commissions.xlsx", "Proveedores y Comisiones.xlsx"),
     "tasks": ("My Tasks.xlsx", "Mis Tareas.xlsx"),
-    "lessons": ("Lessons Learned.xlsx", "Aprendizajes.xlsx"),
     "dashboard": ("Dashboard.html", "Tablero.html"),
 }
 
