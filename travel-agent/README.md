@@ -72,13 +72,13 @@ You write it; the assistant only adds or changes a rule when you ask ("add to my
 ## Install
 
 **Claude chat or Cowork** (web or desktop app): open **Customize → Plugins → Add**, then either:
-- **Add marketplace** and enter `fchambo/fta-claude-plugin`, then add **Travel Agent**, or
+- **Add marketplace** and enter `fchambo/fta-ai`, then add **Travel Agent**, or
 - **Upload plugin** and select `travel-agent.zip`.
 
 **Claude Code:**
 
 ```bash
-claude plugin marketplace add fchambo/fta-claude-plugin
+claude plugin marketplace add fchambo/fta-ai
 claude plugin install travel-agent@fta-marketplace
 ```
 

@@ -35,7 +35,7 @@ from datetime import date
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PARKS = os.path.join(ROOT, "travel-agent", "skills", "park-itinerary", "scripts", "parks")
 OSM_API = "https://api.openstreetmap.org/api/0.6/map?bbox={w},{s},{e},{n}"
-USER_AGENT = "fta-claude-plugin park map builder"
+USER_AGENT = "fta-ai park map builder"
 
 WALKABLE = {"footway", "pedestrian", "path", "steps", "living_street", "corridor", "service", "unclassified"}
 NO_ACCESS = {"private", "no", "destination", "delivery"}
