@@ -1,6 +1,6 @@
 # Freelance Travel Agent with AI
 
-Claude Code plugin marketplace with **travel-agent**, a toolkit for freelance travel agents who work in Excel, Word and PDF.
+**travel-agent** is an AI Agent's plugin for freelance travel agents who work in Excel, Word and PDF. It works in Claude (chat, Cowork and Claude Code) and in ChatGPT.
 
 Its front door is **FTA**, the Freelance Travel AI Agent. It takes a client's request, recalls the client's past trips, hands Disney World to **MinnieAI** and Universal Orlando to **FionaAI**, and turns their research plus Patty's park plan into a priced client quote.
 
