@@ -4,7 +4,7 @@ Agents keep working in **Excel, Word and PDF**. The assistant reads their vouche
 
 ## Install in ChatGPT
 
-ChatGPT Skills are available on eligible Business, Enterprise, Healthcare, and Edu workspaces, subject to product availability and workspace settings. From the repository root, run `python3 tools/build.py --chatgpt`; this updates the shared skill files and creates one ZIP per skill under `dist/chatgpt/`. In ChatGPT, open **Plugins → Plugin Directory → Skills → Create → Upload from your computer**, then upload the ZIPs for the skills you want to install. Repeat for each skill ZIP. If Skills or uploading is unavailable, ask your workspace admin whether it is enabled.
+ChatGPT Skills are available on eligible Business, Enterprise, Healthcare, and Edu workspaces, subject to product availability and workspace settings. Download the ZIP for each skill you want from the [latest release](https://github.com/fchambo/fta-ai/releases/latest) (under **Assets**; don't unzip them). In ChatGPT, open **Plugins → Plugin Directory → Skills → Create → Upload from your computer**, then upload the ZIPs one at a time. FTA needs `fta`, `minnie-ai`, `fiona-ai` and `park-itinerary`. To update, upload the newer ZIPs from the latest release. If Skills or uploading is unavailable, ask your workspace admin whether it is enabled. Developers can build the ZIPs themselves with `python3 tools/build.py --chatgpt` (they go to `dist/chatgpt/`).
 
 In ChatGPT, attach the current Trip Sheet, vouchers, contracts, or other source files to the conversation. Download the updated or generated files ChatGPT returns and save them in your agency folders. ChatGPT skills run in chat mode and do not access files on your computer directly. The Spanish slash commands below are Claude-only; you can still ask for any task in Spanish.
 
@@ -73,7 +73,7 @@ You write it; the assistant only adds or changes a rule when you ask ("add to my
 
 **Claude chat or Cowork** (web or desktop app): open **Customize → Plugins → Add**, then either:
 - **Add marketplace** and enter `fchambo/fta-ai`, then add **Travel Agent**, or
-- **Upload plugin** and select `travel-agent.zip`.
+- **Upload plugin** and select `travel-agent.zip` from the [latest release](https://github.com/fchambo/fta-ai/releases/latest).
 
 **Claude Code:**
 
